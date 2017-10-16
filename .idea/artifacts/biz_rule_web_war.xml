@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="biz-rule-web:war">
+    <output-path>$PROJECT_DIR$/biz-rule-web/target</output-path>
+    <root id="archive" name="fm-biz-rule.war">
+      <element id="artifact" artifact-name="biz-rule-web:war exploded" />
+    </root>
+  </artifact>
+</component>

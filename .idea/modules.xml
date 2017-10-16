@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-common/biz-rule-common.iml" filepath="$PROJECT_DIR$/biz-rule-common/biz-rule-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-dao/biz-rule-dao.iml" filepath="$PROJECT_DIR$/biz-rule-dao/biz-rule-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-interface/biz-rule-interface.iml" filepath="$PROJECT_DIR$/biz-rule-interface/biz-rule-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-interface-impl/biz-rule-interface-impl.iml" filepath="$PROJECT_DIR$/biz-rule-interface-impl/biz-rule-interface-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-service/biz-rule-service.iml" filepath="$PROJECT_DIR$/biz-rule-service/biz-rule-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biz-rule-web/biz-rule-web.iml" filepath="$PROJECT_DIR$/biz-rule-web/biz-rule-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fm-biz-rule.iml" filepath="$PROJECT_DIR$/fm-biz-rule.iml" />
+    </modules>
+  </component>
+</project>
