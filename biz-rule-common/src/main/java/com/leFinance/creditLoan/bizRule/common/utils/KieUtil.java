@@ -1,6 +1,9 @@
 package com.leFinance.creditLoan.bizRule.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.kie.api.KieServices;
+import org.kie.api.builder.ReleaseId;
+import org.kie.api.io.Resource;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
@@ -9,15 +12,30 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author: zhulili1
  * @date: 2017/10/16
- * @description: KieContainer工具类
+ * @description: KieUtil工具类
  */
 @Slf4j
-public class KieContainerUtil {
+public class KieUtil {
 
     public static ConcurrentHashMap<String, KieContainer> kieContainerMap;
 
     public static void setKieContainerMap(){
         kieContainerMap = new ConcurrentHashMap<>(8);
+    }
+
+    public static KieContainer createAndGetKieContainer(String groupId, String artifactId, String version,
+                                                        String kmodule, Resource[] resources){
+        try{
+            KieServices kieServices = KieServices.Factory.get();
+            // 创建 ReleaseId
+            ReleaseId releaseId = kieServices.newReleaseId(groupId, artifactId, version);
+            // 创建 in-memory Jar
+            KieProjectUtil.createAndDeployJar(kieServices, kmodule, releaseId, resources);
+            return kieServices.newKieContainer(releaseId);
+        } catch(Exception e){
+            log.error("创建KieContainer异常{}", e.getMessage(), e);
+            throw new RuntimeException("创建KieContainer异常" + e.getMessage());
+        }
     }
 
     /**

@@ -10,13 +10,12 @@ import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.StringReader;
 import java.util.List;
 
 /**
  * @author: zhulili1
  * @date: 2017/10/16
- * @description: 规则加载服务
+ * @description: 规则加载服务类
  */
 @Slf4j
 @Service

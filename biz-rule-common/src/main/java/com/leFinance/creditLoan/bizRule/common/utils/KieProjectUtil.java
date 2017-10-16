@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 /**
  * @author: zhulili1
  * @date: 2017/10/14
- * @description:
+ * @description: 创建 kie jar 工具类
  */
 public class KieProjectUtil {
 

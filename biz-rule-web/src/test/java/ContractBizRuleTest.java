@@ -33,9 +33,6 @@ public class ContractBizRuleTest {
     @Autowired
     private ContractBizRuleInterfaceImpl contractBizRuleInterfaceImpl;
 
-    @Value("${contract.ksession.name}")
-    private String contractSession;
-
     @Autowired
     @Qualifier("droolsConfig")
     private DroolsConfig droolsConfig;
