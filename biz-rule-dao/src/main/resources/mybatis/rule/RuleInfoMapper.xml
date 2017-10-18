@@ -28,6 +28,10 @@
         PID, GROUP_ID, ARTIFACT_ID, VERSION, KMODULE_PATH, CONTAINER_NAME, KBASE_NAME, KSESSION_NAME,
         DRL_PATH, DRL_TARGET_PATH, DESCRIPTION, CREATE_TIME, UPDATE_TIME
     </sql>
+    <sql id="Insert_Column_List">
+        GROUP_ID, ARTIFACT_ID, VERSION, KMODULE_PATH, CONTAINER_NAME, KBASE_NAME, KSESSION_NAME,
+        DRL_PATH, DRL_TARGET_PATH, DESCRIPTION, CREATE_TIME, UPDATE_TIME
+    </sql>
     <sql id="Select_Column_List">
         GROUP_ID, ARTIFACT_ID, VERSION, KMODULE_PATH, CONTAINER_NAME, KBASE_NAME, KSESSION_NAME,
         DRL_PATH, DRL_TARGET_PATH, DESCRIPTION, CREATE_TIME, UPDATE_TIME
@@ -222,15 +226,43 @@
         where PID = #{pid,jdbcType=INTEGER}
     </update>
 
-    <select id="listSelectResource" resultMap="BaseResultMap">
+    <!-- created by zhulili1, 2017/10/16 -->
+    <select id="listSelectResourceByRuleVersion" parameterType="com.leFinance.creditLoan.bizRule.bo.RuleVersionBo"
+            resultMap="BaseResultMap">
         select DRL_PATH, DRL_TARGET_PATH from RULE_INFO
         where GROUP_ID = #{groupId,jdbcType=VARCHAR} and ARTIFACT_ID = #{artifactId,jdbcType=VARCHAR} and
         VERSION = #{version,jdbcType=VARCHAR}
     </select>
 
-    <select id="selectRuleInfo" resultMap="BaseResultMap">
+    <!-- created by zhulili1, 2017/10/16 -->
+    <select id="selectRuleInfoByRuleVersion" parameterType="com.leFinance.creditLoan.bizRule.bo.RuleVersionBo"
+            resultMap="BaseResultMap">
         select DISTINCT KMODULE_PATH, CONTAINER_NAME from RULE_INFO
         where GROUP_ID = #{groupId,jdbcType=VARCHAR} and ARTIFACT_ID = #{artifactId,jdbcType=VARCHAR} and
         VERSION = #{version,jdbcType=VARCHAR}
     </select>
+
+    <!-- created by zhulili1, 2017/10/18 -->
+    <select id="listSelectRuleInfoByRuleVersion" parameterType="com.leFinance.creditLoan.bizRule.bo.RuleVersionBo"
+            resultMap="BaseResultMap">
+        select <include refid="Select_Column_List"/> from RULE_INFO
+        where GROUP_ID = #{groupId,jdbcType=VARCHAR} and ARTIFACT_ID = #{artifactId,jdbcType=VARCHAR} and
+        VERSION = #{version,jdbcType=VARCHAR}
+    </select>
+
+    <!-- created by zhulili1, 2017/10/18, 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into RULE_INFO
+        (<include refid="Insert_Column_List"/>)
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+            (
+            #{item.groupId,jdbcType=VARCHAR}, #{item.artifactId,jdbcType=VARCHAR},
+            #{item.version,jdbcType=VARCHAR}, #{item.kmodulePath,jdbcType=VARCHAR}, #{item.containerName,jdbcType=VARCHAR},
+            #{item.kbaseName,jdbcType=VARCHAR}, #{item.ksessionName,jdbcType=VARCHAR}, #{item.drlPath,jdbcType=VARCHAR},
+            #{item.drlTargetPath,jdbcType=VARCHAR}, #{item.description,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach >
+    </insert>
 </mapper>

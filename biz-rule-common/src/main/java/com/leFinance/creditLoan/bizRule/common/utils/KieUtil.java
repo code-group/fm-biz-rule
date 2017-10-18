@@ -23,6 +23,16 @@ public class KieUtil {
         kieContainerMap = new ConcurrentHashMap<>(8);
     }
 
+    /**
+     * created by zhulili1, on 2017/10/16
+     * @Description: 创建并返回KieContainer
+     * @param groupId
+     * @param artifactId
+     * @param version
+     * @param kmodule
+     * @param resources
+     * @return
+     */
     public static KieContainer createAndGetKieContainer(String groupId, String artifactId, String version,
                                                         String kmodule, Resource[] resources){
         try{

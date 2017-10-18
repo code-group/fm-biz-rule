@@ -44,13 +44,13 @@ public class ContractBizRuleTest {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("feeValue", new BigDecimal(1));
         dataMap.put("something", "haha");
-
         try{
             Message<Boolean> message = contractBizRuleInterfaceImpl.createDBContract(dataMap);
             log.info("{}", message.getData());
 
         } catch(Exception e){
             log.error("{}", e.getMessage(), e);
+
         }
     }
 

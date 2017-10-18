@@ -1,6 +1,7 @@
 package com.leFinance.creditLoan.bizRule.web.config.drools;
 
 import com.leFinance.creditLoan.bizRule.bo.RuleLoadBo;
+import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
 import com.leFinance.creditLoan.bizRule.common.utils.KieProjectUtil;
 import com.leFinance.creditLoan.bizRule.service.utils.RuleLoadService;
@@ -65,10 +66,11 @@ public class DroolsConfig {
         final String logPrefix = "设置kieContainerMap, ";
 
         try{
+            RuleVersionBo ruleVersionBo = new RuleVersionBo(groupId, artifactId, version);
             // 查询 drl
-            Resource[] resources = ruleLoadService.getKieResources(groupId, artifactId, version);
+            Resource[] resources = ruleLoadService.getKieResources(ruleVersionBo);
             // 查询 kmodule, containerName
-            RuleLoadBo ruleLoadBo = ruleLoadService.getRuleInfo(groupId, artifactId, version);
+            RuleLoadBo ruleLoadBo = ruleLoadService.getRuleInfo(ruleVersionBo);
             // 绑定 containerName, KieContainer
             KieContainer kieContainer = KieUtil.createAndGetKieContainer(groupId, artifactId, version,
                     ruleLoadBo.getKmodule(), resources);

@@ -1,6 +1,7 @@
 package com.leFinance.creditLoan.bizRule.service.utils;
 
 import com.leFinance.creditLoan.bizRule.bo.RuleLoadBo;
+import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.FileUtil;
 import com.leFinance.creditLoan.bizRule.dao.RuleInfoMapper;
 import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
@@ -27,48 +28,46 @@ public class RuleLoadService {
     /**
      * created by zhulili1, on 2017/10/16
      * @Description: 生成Resource
-     * @param groupId
-     * @param artifactId
-     * @param version
+     * @param ruleVersion
      * @return
      */
-    public Resource[] getKieResources(String groupId, String artifactId, String version){
+    public Resource[] getKieResources(RuleVersionBo ruleVersion){
         // 日志前缀
         final String logPrefix = "查询drl信息, ";
 
-        log.info("{}传入参数, groupId={}, artifactId={}, version={}", logPrefix, groupId, artifactId, version);
+        log.info("{}传入参数, {}", logPrefix, ruleVersion);
         try{
-            List<RuleInfo> ruleInfoList = ruleInfoMapper.listSelectResource(groupId, artifactId, version);
-            log.info("{}返回列表，{}", logPrefix, ruleInfoList.toString());
+            List<RuleInfo> ruleInfoList = ruleInfoMapper.listSelectResourceByRuleVersion(ruleVersion);
+            log.info("{}返回列表, {}", logPrefix, ruleInfoList.toString());
             Resource[] resources = new Resource[ruleInfoList.size()];
             for (int i = 0; i < ruleInfoList.size(); ++i) {
                 Resource resource = ResourceFactory.newFileResource(ruleInfoList.get(i).getDrlPath());
                 resource.setTargetPath(ruleInfoList.get(i).getDrlTargetPath());
                 resources[i] = resource;
             }
-            log.info("{}生成Resource列表，{}", logPrefix, resources);
+            log.info("{}生成Resource列表, {}", logPrefix, resources);
             return resources;
         } catch(Exception e){
             log.error("{}异常：{}", logPrefix, e.getMessage(), e);
-            throw new RuntimeException(logPrefix+"异常"+e.getMessage());
+            throw new RuntimeException(logPrefix + "异常"+e.getMessage());
         }
     }
     /**
      * created by zhulili1, on 2017/10/16
      * @Description: 查询KieModule, ContainerName信息
      **/
-    public RuleLoadBo getRuleInfo(String groupId, String artifactId, String version){
+    public RuleLoadBo getRuleInfo(RuleVersionBo ruleVersion){
         // 日志前缀
         final String logPrefix = "查询KieModule, ContainerName信息, ";
 
-        log.info("{}传入参数, groupId={}, artifactId={}, version={}", logPrefix, groupId, artifactId, version);
+        log.info("{}传入参数, {}", logPrefix, ruleVersion);
         try{
-            RuleInfo ruleInfo = ruleInfoMapper.selectRuleInfo(groupId, artifactId, version);
-            log.info("{},查询RuleInfo结果{}", logPrefix, ruleInfo.toString());
+            RuleInfo ruleInfo = ruleInfoMapper.selectRuleInfoByRuleVersion(ruleVersion);
+            log.info("{}查询RuleInfo结果{}", logPrefix, ruleInfo.toString());
             RuleLoadBo ruleLoadBo = new RuleLoadBo();
             ruleLoadBo.setContainerName(ruleInfo.getContainerName());
             ruleLoadBo.setKmodule(FileUtil.readFileToString(ruleInfo.getKmodulePath()));
-            log.info("{},生成{}", logPrefix, ruleLoadBo.toString());
+            log.info("{}生成{}", logPrefix, ruleLoadBo.toString());
             return ruleLoadBo;
         } catch(Exception e){
             log.error("{}异常：{}", logPrefix, e.getMessage(), e);

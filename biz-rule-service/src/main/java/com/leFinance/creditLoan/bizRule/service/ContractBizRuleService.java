@@ -1,8 +1,6 @@
 package com.leFinance.creditLoan.bizRule.service;
 
-import com.leFinance.creditLoan.bizRule.common.utils.BeanUtil;
 import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
-import com.leFinance.creditLoan.bizRule.fact.ContractFact;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,14 +25,13 @@ public class ContractBizRuleService {
 
     public boolean createDBContract(Map<String, Object> dataMap) {
         // 日志前缀
-        final String logPrefix = "判断是否创建融资担保委托合同,";
+        final String logPrefix = "判断是否创建融资担保委托合同, ";
         try{
-            ContractFact contractFact = (ContractFact)BeanUtil.setBeanAttributes(ContractFact.class, dataMap);
-            log.info("{}创建{}", logPrefix, contractFact);
+            log.info("{}传入参数: {}", logPrefix, dataMap);
             KieSession contractKieSession = KieUtil.getKieSession(contractContainer, contractKsession);
-            contractKieSession.insert(contractFact);
+            contractKieSession.insert(dataMap);
             contractKieSession.fireAllRules();
-            return contractFact.getCreateDBContract();
+            return (boolean)dataMap.get("createDBContract");
         } catch(Exception e){
             log.error("{}异常{}", logPrefix, e.getMessage(), e);
             throw new RuntimeException(logPrefix+"异常:"+e.getMessage());
