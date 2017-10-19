@@ -3,10 +3,13 @@ package com.leFinance.creditLoan.bizRule.web.controller;
 import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.service.utils.RuleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -22,6 +25,10 @@ public class RuleOperationController {
     @Autowired
     private RuleService reloadService;
 
+    /**
+     * created by zhulili1, on 2017/10/16
+     * @Description: 重新加载规则
+     **/
     @RequestMapping("reload/{groupId}&{artifactId}&{version}.html")
     public String reloadRules(@PathVariable("groupId") String groupId, @PathVariable("artifactId") String artifactId,
                               @PathVariable("version") String version){
@@ -37,5 +44,31 @@ public class RuleOperationController {
             return "error: " + e.getMessage();
         }
         return "success";
+    }
+
+
+    @RequestMapping(value="/create", params = "method=postConfig", method = RequestMethod.POST)
+    public String postConfig(HttpServletRequest request, HttpServletResponse response,
+                             @RequestParam("groupId") String groupId, @RequestParam("artifactId") String artifactId,
+                             @RequestParam("version") String version, ModelMap modelMap) {
+        response.setCharacterEncoding("GBK");
+
+        boolean checkSuccess = true;
+        String errorMessage = "参数不完整";
+//        if(StringUtils.isBlank(groupId) || StringUtils.isBlank(artifactId) || StringUtils.isBlank(version)) {
+//            checkSuccess = false;
+//        }
+        if (!checkSuccess) {
+            modelMap.addAttribute("message", errorMessage);
+            return "/admin/config/new";
+        }
+
+//        dataId = dataId.trim();
+//        group = group.trim();
+//
+//        this.configService.addConfigInfo(dataId, group, content);
+
+        modelMap.addAttribute("message", "提交成功!");
+        return modelMap.get("message").toString();
     }
 }

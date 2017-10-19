@@ -25,16 +25,6 @@ import java.util.Map;
 @ContextConfiguration(classes = com.leFinance.creditLoan.bizRule.web.Application.class)
 public class BizRuleTest {
 
-    @Value("${test.kie.container.name}")
-    private String testContainer;
-    @Value("${test.ksession.name}")
-    private String testKsession;
-
-    @Value("${contract.kie.container.name}")
-    private String contractContainer;
-    @Value("${contract.ksession.name}")
-    private String contractKsession;
-
     @Autowired
     private RuleService ruleService;
 
@@ -44,11 +34,13 @@ public class BizRuleTest {
      **/
     @Test
     public void testLoad(){
-        KieSession kieSession = KieUtil.getKieSession(testContainer, testKsession);
+        KieSession kieSession = KieUtil.getKieSession("test", "test",
+                "1.0.0", "testKsession");
         kieSession.fireAllRules();
 
         Map<String, Object> map = new HashMap<>();
-        kieSession = KieUtil.getKieSession(contractContainer, contractKsession);
+        kieSession = KieUtil.getKieSession("fm.leFinance.creditLoan", "contract",
+                "1.0.1", "contract_ksession");
         kieSession.insert(map);
         kieSession.fireAllRules();
         System.out.println(map.get("createDBContract"));

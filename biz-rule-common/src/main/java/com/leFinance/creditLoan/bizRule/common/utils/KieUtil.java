@@ -17,12 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class KieUtil {
 
-    public static ConcurrentHashMap<String, KieContainer> kieContainerMap;
-
-    public static void setKieContainerMap(){
-        kieContainerMap = new ConcurrentHashMap<>(8);
-    }
-
     /**
      * created by zhulili1, on 2017/10/16
      * @Description: 创建并返回KieContainer
@@ -33,7 +27,7 @@ public class KieUtil {
      * @param resources
      * @return
      */
-    public static KieContainer createAndGetKieContainer(String groupId, String artifactId, String version,
+    public static void loadRule(String groupId, String artifactId, String version,
                                                         String kmodule, Resource[] resources){
         try{
             KieServices kieServices = KieServices.Factory.get();
@@ -41,38 +35,35 @@ public class KieUtil {
             ReleaseId releaseId = kieServices.newReleaseId(groupId, artifactId, version);
             // 创建 in-memory Jar
             KieProjectUtil.createAndDeployJar(kieServices, kmodule, releaseId, resources);
-            return kieServices.newKieContainer(releaseId);
         } catch(Exception e){
-            log.error("创建KieContainer异常{}", e.getMessage(), e);
+            log.error("创建KieContainer异常: {}", e.getMessage(), e);
             throw new RuntimeException("创建KieContainer异常" + e.getMessage());
         }
     }
 
     /**
      * created by zhulili1, on 2017/10/16
-     * @Description: 获取KieContainer
-     * @param containerName
-     * @return
-     */
-    public static KieContainer getKieContainer(String containerName){
-        return kieContainerMap.get(containerName);
-    }
-
-    /**
-     * created by zhulili1, on 2017/10/16
      * @Description: 获取KieSession
-     * @param containerName
+     * @param groupId
+     * @param artifactId
+     * @param version
      * @param ksessionName
      * @return
      */
-    public static KieSession getKieSession(String containerName, String ksessionName){
+    public static KieSession getKieSession(String groupId, String artifactId, String version, String ksessionName){
+        // 日志前缀
+        final String logPrefix = "通过规则版本, 获取KieSession, ";
+
         try{
-            KieSession kieSession = kieContainerMap.get(containerName).newKieSession(ksessionName);
+            KieServices kieServices = KieServices.Factory.get();
+            ReleaseId releaseId = kieServices.newReleaseId(groupId, artifactId, version);
+            KieSession kieSession = kieServices.newKieContainer(releaseId).newKieSession(ksessionName);
             return kieSession;
         } catch(Exception e){
-            log.error("获取KieSession异常{}", e.getMessage(), e);
-            throw new RuntimeException("获取KieSession异常" + e.getMessage());
+            log.error("{}异常: {}", logPrefix, e.getMessage(), e);
         }
+
+        return null;
     }
 
 }

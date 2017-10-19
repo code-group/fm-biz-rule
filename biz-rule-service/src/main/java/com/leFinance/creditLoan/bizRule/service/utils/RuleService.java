@@ -1,5 +1,6 @@
 package com.leFinance.creditLoan.bizRule.service.utils;
 
+import com.leFinance.creditLoan.bizRule.bo.RuleCreateBo;
 import com.leFinance.creditLoan.bizRule.bo.RuleLoadBo;
 import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
@@ -8,6 +9,7 @@ import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.io.Resource;
 import org.kie.api.runtime.KieContainer;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,13 +45,11 @@ public class RuleService {
             Resource[] resources = ruleLoadService.getKieResources(ruleVersion);
             // 查询 kmodule, containerName
             RuleLoadBo ruleLoadBo = ruleLoadService.getRuleInfo(ruleVersion);
-            // 重新创建 container
-            KieContainer kieContainer = KieUtil.createAndGetKieContainer(ruleVersion.getGroupId(), ruleVersion.getArtifactId(),
-                    ruleVersion.getVersion(), ruleLoadBo.getKmodule(), resources);
-            // 绑定 containerName, KieContainer
-            KieUtil.kieContainerMap.put(ruleLoadBo.getContainerName(), kieContainer);
+            // 重新加载规则
+            KieUtil.loadRule(ruleVersion.getGroupId(), ruleVersion.getArtifactId(), ruleVersion.getVersion(),
+                    ruleLoadBo.getKmodule(), resources);
         } catch(Exception e){
-            log.error("{}异常{}", logPrefix, e.getMessage(), e);
+            log.error("{}异常: {}", logPrefix, e.getMessage(), e);
             throw new RuntimeException(logPrefix + "异常" + e.getMessage());
         }
 
@@ -75,7 +75,7 @@ public class RuleService {
             log.info("{}新版本RuleInfo为: {}", logPrefix, ruleInfoList.toString());
             ruleInfoMapper.batchInsert(ruleInfoList);
         } catch(Exception e){
-            log.error("{}异常{}", logPrefix, e.getMessage(), e);
+            log.error("{}异常: {}", logPrefix, e.getMessage(), e);
             throw new RuntimeException(logPrefix + "异常" + e.getMessage());
         }
     }
@@ -95,6 +95,24 @@ public class RuleService {
             ruleInfo.setUpdateTime(null);
         }
     }
+    /**
+     * created by zhulili1, on 2017/10/18
+     * @Description: 创建规则
+     * @param ruleCreateBo
+     */
+    public void createRuleInfo(RuleCreateBo ruleCreateBo){
+        // 日志前缀
+        final String logPrefix = "创建规则, ";
 
-
+        try{
+            log.info("{}传入参数, {}", logPrefix, ruleCreateBo.toString());
+            RuleInfo ruleInfo = new RuleInfo();
+            BeanUtils.copyProperties(ruleCreateBo, ruleInfo);
+            ruleInfo.setCreateTime(new Date());
+            log.info("{}插入规则记录, {}", logPrefix, ruleInfo);
+            ruleInfoMapper.insertSelective(ruleInfo);
+        } catch(Exception e){
+            log.error("{}异常, {}", logPrefix, e.getMessage(), e);
+        }
+    }
 }

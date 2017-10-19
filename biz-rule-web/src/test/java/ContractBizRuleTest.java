@@ -1,4 +1,6 @@
-import com.leFinance.creditLoan.bizRule.interfaces.impl.ContractBizRuleInterfaceImpl;
+import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
+import com.leFinance.creditLoan.bizRule.dto.RuleReqDto;
+import com.leFinance.creditLoan.bizRule.interfaces.impl.RuleInterfaceImpl;
 import com.leFinance.creditLoan.bizRule.web.config.drools.DroolsConfig;
 import data.Message;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +12,6 @@ import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class ContractBizRuleTest {
 
     @Autowired
-    private ContractBizRuleInterfaceImpl contractBizRuleInterfaceImpl;
+    private RuleInterfaceImpl ruleInterfaceImpl;
 
     @Autowired
     @Qualifier("droolsConfig")
@@ -39,13 +40,18 @@ public class ContractBizRuleTest {
 
     @Test
     public void testContractBizRule(){
-//        CreateContractReqDto createContractReqDto = new CreateContractReqDto();
-//        createContractReqDto.setFeeValue(new BigDecimal(1));
+        RuleReqDto ruleReqDto = new RuleReqDto();
+        ruleReqDto.setGroupId("fm.leFinance.creditLoan");
+        ruleReqDto.setArtifactId("contract");
+        ruleReqDto.setVersion("1.0.2");
+        ruleReqDto.setContainerName("contractContainer");
+        ruleReqDto.setKsessionName("contract_ksession");
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("feeValue", new BigDecimal(1));
         dataMap.put("something", "haha");
+        ruleReqDto.setDataMap(dataMap);
         try{
-            Message<Boolean> message = contractBizRuleInterfaceImpl.createDBContract(dataMap);
+            Message<Map<String, Object>> message = ruleInterfaceImpl.callRule(ruleReqDto);
             log.info("{}", message.getData());
 
         } catch(Exception e){
@@ -54,41 +60,4 @@ public class ContractBizRuleTest {
         }
     }
 
-    @Test
-    public void testReset(){
-        KieServices kieServices = KieServices.Factory.get();
-        KieFileSystem kfs = kieServices.newKieFileSystem();
-        kfs.write( "src/main/resources/rules/test.drl", "package test;\n " +
-                        "import com.leFinance.creditLoan.bizRule.fact.ContractFact;\n" +
-                        "dialect  \"mvel\" \n" +
-                        "rule \"create guarantee contract\"\n " +
-                        "lock-on-active\n " +
-                        "when\n " +
-                        "   $b : ContractFact(feeValue != null)\n " +
-                        "then\n " +
-                        "   System.out.println(\"test\");\n " +
-                        "end");
-
-        KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
-        Results results = kieBuilder.getResults();
-        if (results.hasMessages(org.kie.api.builder.Message.Level.ERROR)) {
-            System.out.println(results.getMessages());
-            throw new IllegalStateException("### errors ###");
-        }
-
-//        droolsAutoConfiguration.resetKieSession(contractSession, "contractKieSession");
-
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("feeValue", new BigDecimal(1));
-        dataMap.put("something", "haha");
-
-        try{
-            Message<Boolean> message = contractBizRuleInterfaceImpl.createDBContract(dataMap);
-            log.info("{}", message.getData());
-
-        } catch(Exception e){
-            log.error("{}", e.getMessage(), e);
-        }
-
-    }
 }

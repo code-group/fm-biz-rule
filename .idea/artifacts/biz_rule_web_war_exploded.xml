@@ -22,6 +22,11 @@
           <element id="archive" name="biz-rule-interface-1.0-SNAPSHOT.jar">
             <element id="module-output" name="biz-rule-interface" />
           </element>
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.10.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.10.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter:1.5.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:1.5.6.RELEASE" />
@@ -45,13 +50,15 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.9" />
           <element id="library" level="project" name="Maven: org.springframework:spring-web:4.3.10.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.10.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.3.10.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.10.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:1.5.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf-spring4:2.1.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf:2.1.5.RELEASE" />
+          <element id="library" level="project" name="Maven: ognl:ognl:3.0.8" />
+          <element id="library" level="project" name="Maven: org.unbescape:unbescape:1.1.0.RELEASE" />
+          <element id="library" level="project" name="Maven: nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:1.4.0" />
+          <element id="library" level="project" name="Maven: org.codehaus.groovy:groovy:2.4.12" />
           <element id="file-copy" path="$MAVEN_REPOSITORY$/com/fm/creditLoan/credit-contract-dto/1.0-SNAPSHOT/credit-contract-dto-1.0-20171010.070857-3.jar" output-file-name="credit-contract-dto-1.0-SNAPSHOT.jar" />
           <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.16.18" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.34" />

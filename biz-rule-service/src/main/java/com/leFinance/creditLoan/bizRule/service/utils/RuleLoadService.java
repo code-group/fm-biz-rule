@@ -3,10 +3,12 @@ package com.leFinance.creditLoan.bizRule.service.utils;
 import com.leFinance.creditLoan.bizRule.bo.RuleLoadBo;
 import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.FileUtil;
+import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
 import com.leFinance.creditLoan.bizRule.dao.RuleInfoMapper;
 import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.io.Resource;
+import org.kie.api.runtime.KieContainer;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,27 @@ public class RuleLoadService {
 
     @Autowired
     private RuleInfoMapper ruleInfoMapper;
+
+    /**
+     * created by zhulili1, on 2017/10/16
+     * @Description: 设置KieContainerMap
+     **/
+    public void loadRule(String groupId, String artifactId, String version){
+        // 日志前缀
+        final String logPrefix = "设置kieContainerMap, ";
+
+        try{
+            RuleVersionBo ruleVersionBo = new RuleVersionBo(groupId, artifactId, version);
+            // 查询 drl
+            Resource[] resources = getKieResources(ruleVersionBo);
+            // 查询 kmodule, containerName
+            RuleLoadBo ruleLoadBo = getRuleInfo(ruleVersionBo);
+            // 绑定 containerName, KieContainer
+            KieUtil.loadRule(groupId, artifactId, version, ruleLoadBo.getKmodule(), resources);
+        } catch (Exception e) {
+            log.error("{}异常：{}", logPrefix, e.getMessage(), e);
+        }
+    }
 
     /**
      * created by zhulili1, on 2017/10/16

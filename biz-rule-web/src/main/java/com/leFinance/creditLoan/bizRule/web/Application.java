@@ -13,9 +13,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
  * @Description: Application启动自动配置类
  */
 @EnableDubboConfiguration
-@SpringBootApplication(scanBasePackages = {"com.leFinance.creditLoan.bizRule.service", "com.leFinance.creditLoan.bizRule.web"
-        , "com.leFinance.creditLoan.bizRule.common"
-})
+@SpringBootApplication(scanBasePackages = {"com.leFinance.creditLoan.bizRule.service", "com.leFinance.creditLoan.bizRule.web"})
 public class Application {
 
     public static void main(String[] args) {
