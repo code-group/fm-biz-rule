@@ -1,6 +1,6 @@
 package com.leFinance.creditLoan.bizRule.interfaces.impl;
 
-import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
+import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.dto.RuleReqDto;
 import com.leFinance.creditLoan.bizRule.interfaces.RuleInterface;
 import com.leFinance.creditLoan.bizRule.service.RuleCallService;
@@ -9,7 +9,6 @@ import data.Messages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -39,10 +38,10 @@ public class RuleInterfaceImpl implements RuleInterface {
         final String logPrefix = "调用规则接口, ";
         try {
             log.info("{}传入参数, {}", logPrefix, ruleReqDto);
-            RuleCallBo ruleCallBo = new RuleCallBo();
-            BeanUtils.copyProperties(ruleReqDto, ruleCallBo);
+            RuleVersionBo ruleVersionBo = new RuleVersionBo();
+            BeanUtils.copyProperties(ruleReqDto, ruleVersionBo);
             Map<String, Object> dataMap = ruleReqDto.getDataMap();
-            ruleCallService.callRule(ruleCallBo, dataMap);
+            ruleCallService.callRule(ruleVersionBo, dataMap);
             log.info("{}结果{}", logPrefix, dataMap);
             return Messages.success(dataMap);
         } catch (Exception e) {

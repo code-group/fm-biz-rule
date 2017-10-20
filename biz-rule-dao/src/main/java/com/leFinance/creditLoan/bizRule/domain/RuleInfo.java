@@ -44,57 +44,12 @@ public class RuleInfo {
 
     /**
      * <pre>
-     * kmodule文件位置
-     * 表字段： RULE_INFO.KMODULE_PATH
+     * drl规则内容
+     * 表字段： RULE_INFO.DRL
      * </pre>
      *
      */
-    private String kmodulePath;
-
-    /**
-     * <pre>
-     * container名称
-     * 表字段： RULE_INFO.CONTAINER_NAME
-     * </pre>
-     *
-     */
-    private String containerName;
-
-    /**
-     * <pre>
-     * kbase名称
-     * 表字段： RULE_INFO.KBASE_NAME
-     * </pre>
-     *
-     */
-    private String kbaseName;
-
-    /**
-     * <pre>
-     * ksession名称
-     * 表字段： RULE_INFO.KSESSION_NAME
-     * </pre>
-     *
-     */
-    private String ksessionName;
-
-    /**
-     * <pre>
-     * 规则文件位置
-     * 表字段： RULE_INFO.DRL_PATH
-     * </pre>
-     *
-     */
-    private String drlPath;
-
-    /**
-     * <pre>
-     * 规则文件加载的目标位置
-     * 表字段： RULE_INFO.DRL_TARGET_PATH
-     * </pre>
-     *
-     */
-    private String drlTargetPath;
+    private String drl;
 
     /**
      * <pre>

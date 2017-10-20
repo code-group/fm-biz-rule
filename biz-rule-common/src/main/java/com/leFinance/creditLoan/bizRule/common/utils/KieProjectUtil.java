@@ -38,7 +38,8 @@ public class KieProjectUtil {
         return km;
     }
 
-    private static byte[] createJar(KieServices ks, String kmoduleContent, Predicate<String> classFilter, ReleaseId releaseId, Resource... resources) {
+    private static byte[] createJar(KieServices ks, String kmoduleContent, Predicate<String> classFilter,
+                                    ReleaseId releaseId, Resource... resources) {
         KieFileSystem kfs = ks.newKieFileSystem().generateAndWritePomXML(releaseId).writeKModuleXML(kmoduleContent);
         for (int i = 0; i < resources.length; i++) {
             if (resources[i] != null) {
@@ -56,22 +57,23 @@ public class KieProjectUtil {
 
     /**
      * created by zhulili1, on 2017/10/20
-     * @Description: 通过读字符串创建KJar
+     * @Description: 通过字符串创建KJar
      *
      **/
     public static KieModule createAndDeployJar( KieServices ks,
                                                 ReleaseId releaseId,
-                                                String kmoduleContent,
-                                                String... drls ) {
-        byte[] jar = createKJar( ks, releaseId, kmoduleContent, drls );
-        return deployJarIntoRepository( ks, jar );
+                                                String[] drls ) {
+        byte[] jar = createKJar(ks, releaseId, drls);
+
+        // Deploy jar into the repository
+        KieModule km = deployJarIntoRepository(ks, jar);
+        return km;
     }
 
     private static byte[] createKJar(KieServices ks,
                                     ReleaseId releaseId,
-                                    String kmoduleContent,
-                                    String... drls) {
-        KieFileSystem kfs = ks.newKieFileSystem().generateAndWritePomXML(releaseId).writeKModuleXML(kmoduleContent);
+                                    String[] drls) {
+        KieFileSystem kfs = ks.newKieFileSystem().generateAndWritePomXML(releaseId);
         for (int i = 0; i < drls.length; i++) {
             if (drls[i] != null) {
                 kfs.write("src/main/resources/r" + i + ".drl", drls[i]);

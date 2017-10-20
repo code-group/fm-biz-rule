@@ -1,14 +1,11 @@
 package com.leFinance.creditLoan.bizRule.service.utils;
 
 import com.leFinance.creditLoan.bizRule.bo.RuleCreateBo;
-import com.leFinance.creditLoan.bizRule.bo.RuleLoadBo;
 import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
 import com.leFinance.creditLoan.bizRule.dao.RuleInfoMapper;
 import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.kie.api.io.Resource;
-import org.kie.api.runtime.KieContainer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +30,7 @@ public class RuleService {
 
     /**
      * created by zhulili1, on 2017/10/16
-     * @Description: 重新加载规则（新增container，或修改container）
+     * @Description: 重新加载规则
      * @param ruleVersion
      */
     public void reloadRule(RuleVersionBo ruleVersion){
@@ -42,12 +39,9 @@ public class RuleService {
         try{
             log.info("{}传入参数{}", logPrefix, ruleVersion);
             // 查询 drl
-            Resource[] resources = ruleLoadService.getKieResources(ruleVersion);
-            // 查询 kmodule, containerName
-            RuleLoadBo ruleLoadBo = ruleLoadService.getRuleInfo(ruleVersion);
+            String[] drls = ruleLoadService.getDrlArray(ruleVersion);
             // 重新加载规则
-            KieUtil.loadRule(ruleVersion.getGroupId(), ruleVersion.getArtifactId(), ruleVersion.getVersion(),
-                    ruleLoadBo.getKmodule(), resources);
+            KieUtil.loadRule(ruleVersion.getGroupId(), ruleVersion.getArtifactId(), ruleVersion.getVersion(), drls);
         } catch(Exception e){
             log.error("{}异常: {}", logPrefix, e.getMessage(), e);
             throw new RuntimeException(logPrefix + "异常" + e.getMessage());

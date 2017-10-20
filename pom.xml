@@ -12,6 +12,7 @@
         <module>biz-rule-service</module>
         <module>biz-rule-common</module>
         <module>biz-rule-dao</module>
+        <module>biz-rule-dto</module>
     </modules>
     <name>fm-biz-rule</name>
     <url>http://maven.apache.org</url>

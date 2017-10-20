@@ -1,16 +1,14 @@
-package com.leFinance.creditLoan.bizRule.bo;
+package com.leFinance.creditLoan.bizRule.vo;
 
 import lombok.Data;
 
 /**
  * @author: zhulili1
- * @date: 2017/10/19
- * @description: 调用规则参数
+ * @date: 2017/10/20
+ * @description: 创建规则参数
  */
-
 @Data
-public class RuleCallBo {
-
+public class RuleCreateVo {
     /**
      * <pre>
      * 规则组件GroupId
@@ -40,20 +38,19 @@ public class RuleCallBo {
 
     /**
      * <pre>
-     * container名称
-     * 表字段： RULE_INFO.CONTAINER_NAME
+     * drl规则内容
+     * 表字段： RULE_INFO.DRL
      * </pre>
      *
      */
-    private String containerName;
-
+    private String drl;
 
     /**
      * <pre>
-     * ksession名称
-     * 表字段： RULE_INFO.KSESSION_NAME
+     * 规则文件描述
+     * 表字段： RULE_INFO.DESCRIPTION
      * </pre>
      *
      */
-    private String ksessionName;
+    private String description;
 }

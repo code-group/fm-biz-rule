@@ -20,16 +20,10 @@ public interface RuleInfoMapper {
     int updateByPrimaryKey(RuleInfo record);
 
     /**
-     * created by zhulili1, on 2017/10/16
-     * @Description: 查询drl文件路径，drl的目标路径
+     * created by zhulili1, on 2017/10/20
+     * @Description: 查询drl列表
      **/
-    List<RuleInfo> listSelectResourceByRuleVersion(RuleVersionBo item);
-
-    /**
-     * created by zhulili1, on 2017/10/16
-     * @Description: 查询kieModule文件路径，containerName
-     **/
-    RuleInfo selectRuleInfoByRuleVersion(RuleVersionBo ruleVersionBo);
+    List<String> listSelectDrlByRuleVersion(RuleVersionBo ruleVersionBo);
 
     /**
      * created by zhulili1, on 2017/10/18

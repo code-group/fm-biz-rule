@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="biz-rule-common" />
         <module name="biz-rule-dao" />
+        <module name="biz-rule-dto" />
         <module name="biz-rule-interface" />
         <module name="biz-rule-interface-impl" />
         <module name="biz-rule-service" />
@@ -24,6 +25,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="biz-rule-common" target="1.8" />
       <module name="biz-rule-dao" target="1.8" />
+      <module name="biz-rule-dto" target="1.8" />
       <module name="biz-rule-interface" target="1.8" />
       <module name="biz-rule-interface-impl" target="1.8" />
       <module name="biz-rule-service" target="1.8" />

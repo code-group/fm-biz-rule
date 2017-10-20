@@ -1,4 +1,3 @@
-import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
 import com.leFinance.creditLoan.bizRule.dto.RuleReqDto;
 import com.leFinance.creditLoan.bizRule.interfaces.impl.RuleInterfaceImpl;
 import com.leFinance.creditLoan.bizRule.web.config.drools.DroolsConfig;
@@ -40,8 +39,6 @@ public class ContractBizRuleTest {
         ruleReqDto.setGroupId("fm.leFinance.creditLoan");
         ruleReqDto.setArtifactId("contract");
         ruleReqDto.setVersion("1.0.1");
-        ruleReqDto.setContainerName("contractContainer");
-        ruleReqDto.setKsessionName("contract_ksession");
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("feeValue", new BigDecimal(1));
         dataMap.put("something", "haha");

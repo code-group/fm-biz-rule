@@ -35,12 +35,12 @@ public class BizRuleTest {
     @Test
     public void testLoad(){
         KieSession kieSession = KieUtil.getKieSession("test", "test",
-                "1.0.0", "testKsession");
+                "1.0.0");
         kieSession.fireAllRules();
 
         Map<String, Object> map = new HashMap<>();
         kieSession = KieUtil.getKieSession("fm.leFinance.creditLoan", "contract",
-                "1.0.1", "contract_ksession");
+                "1.0.1");
         kieSession.insert(map);
         kieSession.fireAllRules();
         System.out.println(map.get("createDBContract"));

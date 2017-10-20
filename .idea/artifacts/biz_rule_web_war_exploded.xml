@@ -22,6 +22,9 @@
           <element id="archive" name="biz-rule-interface-1.0-SNAPSHOT.jar">
             <element id="module-output" name="biz-rule-interface" />
           </element>
+          <element id="archive" name="biz-rule-dto-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="biz-rule-dto" />
+          </element>
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.3.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" />

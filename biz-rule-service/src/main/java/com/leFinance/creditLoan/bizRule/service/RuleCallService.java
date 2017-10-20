@@ -1,6 +1,6 @@
 package com.leFinance.creditLoan.bizRule.service;
 
-import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
+import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.KieUtil;
 import com.leFinance.creditLoan.bizRule.service.utils.RuleLoadService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,21 +26,21 @@ public class RuleCallService {
      * created by zhulili1, on 2017/10/19
      * @Description: 调用规则
      **/
-    public void callRule(RuleCallBo ruleCallBo, Map<String, Object> dataMap) {
+    public void callRule(RuleVersionBo ruleVersionBo, Map<String, Object> dataMap) {
         // 日志前缀
         final String logPrefix = "调用规则, ";
         try{
-            log.info("{}传入参数, {}, {}", logPrefix, ruleCallBo.toString(), dataMap);
-            KieSession kieSession = KieUtil.getKieSession(ruleCallBo.getGroupId(), ruleCallBo.getArtifactId(),
-                    ruleCallBo.getVersion(), ruleCallBo.getKsessionName());
+            log.info("{}传入参数, {}, {}", logPrefix, ruleVersionBo.toString(), dataMap);
+            KieSession kieSession = KieUtil.getKieSession(ruleVersionBo.getGroupId(), ruleVersionBo.getArtifactId(),
+                    ruleVersionBo.getVersion());
             if(kieSession == null) {  // 实时加载规则
-                log.info("{}规则未加载，加载规则{}", logPrefix, ruleCallBo);
-                ruleLoadService.loadRule(ruleCallBo.getGroupId(), ruleCallBo.getArtifactId(), ruleCallBo.getVersion());
-                kieSession = KieUtil.getKieSession(ruleCallBo.getGroupId(), ruleCallBo.getArtifactId(),
-                        ruleCallBo.getVersion(), ruleCallBo.getKsessionName());
+                log.info("{}规则未加载，加载规则{}", logPrefix, ruleVersionBo);
+                ruleLoadService.loadRule(ruleVersionBo.getGroupId(), ruleVersionBo.getArtifactId(), ruleVersionBo.getVersion());
+                kieSession = KieUtil.getKieSession(ruleVersionBo.getGroupId(), ruleVersionBo.getArtifactId(),
+                        ruleVersionBo.getVersion());
                 if(kieSession == null){
-                    log.error("{}规则不存在: {}", logPrefix, ruleCallBo.toString());
-                    throw new RuntimeException("规则不存在: " + ruleCallBo.toString());
+                    log.error("{}规则不存在: {}", logPrefix, ruleVersionBo.toString());
+                    throw new RuntimeException("规则不存在: " + ruleVersionBo.toString());
                 }
             }
             // 传入数据，触发规则

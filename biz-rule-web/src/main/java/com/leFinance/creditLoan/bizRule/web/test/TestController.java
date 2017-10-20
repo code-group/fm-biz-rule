@@ -1,8 +1,7 @@
 package com.leFinance.creditLoan.bizRule.web.test;
 
-import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
+import com.leFinance.creditLoan.bizRule.bo.RuleVersionBo;
 import com.leFinance.creditLoan.bizRule.common.utils.StringUtil;
-import com.leFinance.creditLoan.bizRule.dto.RuleReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,12 +36,10 @@ public class TestController {
 
     @RequestMapping("/drools")
     public String testDrools(Model model) {
-        RuleCallBo ruleCallBo = new RuleCallBo();
+        RuleVersionBo ruleCallBo = new RuleVersionBo();
         ruleCallBo.setGroupId("fm.leFinance.creditLoan");
         ruleCallBo.setArtifactId("contract");
         ruleCallBo.setVersion("1.0.0");
-        ruleCallBo.setContainerName("contractContainer");
-        ruleCallBo.setKsessionName("contract_ksession");
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("feeValue", new BigDecimal(1));
         dataMap.put("something", "haha");

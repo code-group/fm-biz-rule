@@ -12,5 +12,5 @@ public class TestFact {
     private BigDecimal feeValue;
 
     private String something;
-
+    private String anything;
 }

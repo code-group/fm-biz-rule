@@ -42,5 +42,6 @@ public class RuleVersionBo {
         this.artifactId = artifactId;
         this.version = version;
     }
-
+    public RuleVersionBo(){
+    }
 }

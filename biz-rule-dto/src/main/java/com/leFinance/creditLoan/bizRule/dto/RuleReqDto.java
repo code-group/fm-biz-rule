@@ -42,24 +42,6 @@ public class RuleReqDto implements Serializable {
     private String version;
 
     /**
-     * <pre>
-     * container名称
-     * 表字段： RULE_INFO.CONTAINER_NAME
-     * </pre>
-     *
-     */
-    private String containerName;
-
-    /**
-     * <pre>
-     * ksession名称
-     * 表字段： RULE_INFO.KSESSION_NAME
-     * </pre>
-     *
-     */
-    private String ksessionName;
-
-    /**
      * 操作数据
      */
     private Map<String, Object> dataMap;
