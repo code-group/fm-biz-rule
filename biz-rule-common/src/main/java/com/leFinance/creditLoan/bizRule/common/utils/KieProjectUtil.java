@@ -1,8 +1,10 @@
 package com.leFinance.creditLoan.bizRule.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.drools.compiler.kie.builder.impl.InternalKieModule;
 import org.kie.api.KieServices;
 import org.kie.api.builder.*;
+import org.kie.api.builder.model.KieModuleModel;
 import org.kie.api.io.Resource;
 import org.kie.internal.builder.InternalKieBuilder;
 
@@ -13,13 +15,19 @@ import java.util.function.Predicate;
  * @date: 2017/10/14
  * @description: 创建 kie jar 工具类
  */
+@Slf4j
 public class KieProjectUtil {
 
+
+    /**
+     * created by zhulili1, on 2017/10/20
+     * @Description: 通过Resource创建KJar
+     **/
     public static KieModule createAndDeployJar(KieServices ks, String kmoduleContent, ReleaseId releaseId, Resource... resources) {
         return createAndDeployJar(ks, kmoduleContent, o -> true, releaseId, resources);
     }
 
-    public static KieModule createAndDeployJar(KieServices ks,
+    private static KieModule createAndDeployJar(KieServices ks,
                                                String kmoduleContent,
                                                Predicate<String> classFilter,
                                                ReleaseId releaseId,
@@ -30,28 +38,59 @@ public class KieProjectUtil {
         return km;
     }
 
-    public static byte[] createJar(KieServices ks, String kmoduleContent, Predicate<String> classFilter, ReleaseId releaseId, Resource... resources) {
+    private static byte[] createJar(KieServices ks, String kmoduleContent, Predicate<String> classFilter, ReleaseId releaseId, Resource... resources) {
         KieFileSystem kfs = ks.newKieFileSystem().generateAndWritePomXML(releaseId).writeKModuleXML(kmoduleContent);
         for (int i = 0; i < resources.length; i++) {
             if (resources[i] != null) {
                 kfs.write(resources[i]);
             }
         }
-        KieBuilder kieBuilder = ks.newKieBuilder(kfs);
-        ((InternalKieBuilder) kieBuilder).buildAll(classFilter);
-        Results results = kieBuilder.getResults();
-        if (results.hasMessages(Message.Level.ERROR)) {
-            throw new IllegalStateException(results.getMessages(Message.Level.ERROR).toString());
-        }
-        InternalKieModule kieModule = (InternalKieModule) ks.getRepository()
-                .getKieModule(releaseId);
-        byte[] jar = kieModule.getBytes();
-        return jar;
+        return buildKJar(ks, kfs, releaseId);
     }
 
     private static KieModule deployJarIntoRepository(KieServices ks, byte[] jar) {
         Resource jarRes = ks.getResources().newByteArrayResource(jar);
         KieModule km = ks.getRepository().addKieModule(jarRes);
         return km;
+    }
+
+    /**
+     * created by zhulili1, on 2017/10/20
+     * @Description: 通过读字符串创建KJar
+     *
+     **/
+    public static KieModule createAndDeployJar( KieServices ks,
+                                                ReleaseId releaseId,
+                                                String kmoduleContent,
+                                                String... drls ) {
+        byte[] jar = createKJar( ks, releaseId, kmoduleContent, drls );
+        return deployJarIntoRepository( ks, jar );
+    }
+
+    private static byte[] createKJar(KieServices ks,
+                                    ReleaseId releaseId,
+                                    String kmoduleContent,
+                                    String... drls) {
+        KieFileSystem kfs = ks.newKieFileSystem().generateAndWritePomXML(releaseId).writeKModuleXML(kmoduleContent);
+        for (int i = 0; i < drls.length; i++) {
+            if (drls[i] != null) {
+                kfs.write("src/main/resources/r" + i + ".drl", drls[i]);
+            }
+        }
+        return buildKJar(ks, kfs, releaseId);
+    }
+
+    private static byte[] buildKJar(KieServices ks, KieFileSystem kfs, ReleaseId releaseId) {
+        KieBuilder kb = ks.newKieBuilder(kfs).buildAll();
+        if (kb.getResults().hasMessages(Message.Level.ERROR)) {
+            for (Message result : kb.getResults().getMessages()) {
+                log.info(result.getText());
+            }
+            throw new IllegalStateException(kb.getResults().getMessages(Message.Level.ERROR).toString());
+        }
+        InternalKieModule kieModule = (InternalKieModule) ks.getRepository()
+                .getKieModule(releaseId);
+        byte[] jar = kieModule.getBytes();
+        return jar;
     }
 }

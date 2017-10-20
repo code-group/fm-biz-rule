@@ -1,25 +1,21 @@
 package com.leFinance.creditLoan.bizRule.web.test;
 
 import com.leFinance.creditLoan.bizRule.bo.RuleCallBo;
+import com.leFinance.creditLoan.bizRule.common.utils.StringUtil;
 import com.leFinance.creditLoan.bizRule.dto.RuleReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.leFinance.creditLoan.bizRule.service.RuleCallService;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -72,14 +68,21 @@ public class TestController {
         return "/fileUpload";
     }
     /**
-     * 多文件具体上传时间，主要是使用了MultipartHttpServletRequest和MultipartFile
+     * 多文件上传，主要是使用了MultipartHttpServletRequest和MultipartFile
      * @param request
      * @return
      */
     @RequestMapping(value="/batch/upload", method=RequestMethod.POST)
     @ResponseBody
     public String handleFileUpload(HttpServletRequest request, @RequestParam("username") String username){
-        System.out.println("传参：" + username);
+
+        try {
+            System.out.println(username);
+            username = StringUtil.transformCode(username);
+            System.out.println("传参：" + username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         List<MultipartFile> files =((MultipartHttpServletRequest)request).getFiles("file");
         MultipartFile file = null;
         BufferedOutputStream stream = null;
@@ -88,9 +91,8 @@ public class TestController {
             if (!file.isEmpty()) {
                 try {
                     byte[] bytes = file.getBytes();
-                    stream = new BufferedOutputStream(new FileOutputStream(new File(file.getOriginalFilename())));
-                    stream.write(bytes);
-                    stream.close();
+                    String content = new String(bytes, "UTF-8");
+                    System.out.println(content);
                 } catch (Exception e) {
                     stream =  null;
                     return "You failed to upload " + i + " =>" + e.getMessage();
@@ -101,5 +103,11 @@ public class TestController {
         }
         return "upload successful";
 
+    }
+
+    @RequestMapping("/chinese/{username}")
+    public String link(@PathVariable("username") String username){
+        System.out.println(username);
+        return username;
     }
 }
