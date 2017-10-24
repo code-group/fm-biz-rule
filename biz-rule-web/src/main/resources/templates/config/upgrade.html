@@ -7,22 +7,45 @@
         function confirmForDelete(){
             return window.confirm("你确认要删除该配置信息吗??");
         }
-        function save(method){
-            document.all.creationForm.method.value=method;
-            document.all.creationForm.submit();
+        function update(){
+            if(window.check()) {
+                document.all.updateForm.submit();
+            }
         }
 
     </script>
+    <script type="text/javascript">
+        function check() {
+            if(document.updateForm.groupId.value=="") {
+                alert("groupId不能为空!");
+                document.updateForm.groupId.focus();
+                return false;
+            } else if(document.updateForm.artifactId.value=="") {
+                alert("artifactId不能为空!");
+                document.updateForm.artifactId.focus();
+                return false;
+            } else if(document.updateForm.version.value=="") {
+                alert("version不能为空!");
+                document.updateForm.version.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
-<h2><strong>修改版本信息</strong></h2>
+<h2 align="center"><strong>修改版本信息</strong></h2>
 <div th:include="/common/message :: html"/>
-<form action="#" enctype="multipart/form-data" th:action="@{/rule/upgrade_rule}" method="post">
+<form name="updateForm" action="#" enctype="multipart/form-data" th:action="@{/rule/upgrade_rule}" method="post">
     <table align='center'>
+        <tr>
+            <td></td>
+            <td colspan="2"> 注：以下信息不能为空~</td>
+        </tr>
         <tr>
             <td width="20%" align="right" valign="top" rowspan="2">groupId:</td>
             <td width="15%">当前值</td>
-            <td><span th:text="${oldGroupId}"/></td>
+            <td><span th:text="${newVersion.groupId}"/></td>
         </tr>
         <tr>
             <td width="15%">修改为</td>
@@ -49,16 +72,14 @@
         <tr>
             <td width="15%">修改为</td>
             <td>
-                <input type='hidden' name="oldVersion" value='${method}'/>
                 <input type='text' name="version" th:with="version=${newVersion.version}" th:value="${version}" />
             </td>
         </tr>
         <tr>
             <td width="20%" align="right"></td>
             <td width="15%">
-                <input type="submit" value="修改"/>
             </td>
-            <td></td>
+            <td><input type="button" value="修改" onclick="update()"/></td>
 
         </tr>
     </table>

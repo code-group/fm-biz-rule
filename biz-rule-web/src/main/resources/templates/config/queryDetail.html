@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h2><strong>规则信息</strong></h2>
+<h2 align="center"><strong>规则信息</strong></h2>
 <div th:include="/common/message :: html"></div>
 
     <table align='center'>
@@ -23,11 +23,11 @@
     <div th:if="${!#lists.isEmpty(ruleDetailQueryVo.ruleInfoList)}">
         <table align='center'  border='1'>
             <tr>
-                <td>描述</td>
-                <td>drl内容</td>
-                <td>创建时间</td>
-                <td>修改时间</td>
-                <td>操作</td>
+                <th>描述</th>
+                <th>drl内容</th>
+                <th>创建时间</th>
+                <th>修改时间</th>
+                <th>操作</th>
             </tr>
             <tr th:each="ruleInfo : ${ruleDetailQueryVo.ruleInfoList}">
                 <td th:text="${ruleInfo.description}">...</td>

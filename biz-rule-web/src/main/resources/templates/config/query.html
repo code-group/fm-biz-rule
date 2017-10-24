@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     </head>
     <body>
-        <h2><strong>查询规则</strong></h2>
+        <h2 align="center"><strong>查询规则</strong></h2>
         <div th:include="/common/message :: html"></div>
 
         <form action="#" th:action="@{/rule/query_rule}" method="post">
@@ -26,10 +26,10 @@
         <div th:if="${!#lists.isEmpty(ruleVersionList)}"> <!-- ${ruleVersionList != null} and-->
             <table align='center'  border='1' width="800">
                 <tr>
-                    <td>groupId</td>
-                    <td>artifactId</td>
-                    <td>version</td>
-                    <td>操作</td>
+                    <th>groupId</th>
+                    <th>artifactId</th>
+                    <th>version</th>
+                    <th>操作</th>
                 </tr>
                 <tr th:each="ruleVersion : ${ruleVersionList}">
                     <td th:text="${ruleVersion.groupId}">...</td>

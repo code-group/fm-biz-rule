@@ -8,32 +8,56 @@
             return window.confirm("你确认要删除该配置信息吗??");
         }
         function update(method){
-            document.all.updateForm.method.value=method;
-            document.all.updateForm.submit();
+            if(window.check()) {
+                document.all.updateForm.method.value = method;
+                document.all.updateForm.submit();
+            }
         }
 
     </script>
+    <script type="text/javascript">
+        function check() {
+            if(document.updateForm.groupId.value=="") {
+                alert("groupId不能为空!");
+                document.updateForm.groupId.focus();
+                return false;
+            } else if(document.updateForm.artifactId.value=="") {
+                alert("artifactId不能为空!");
+                document.updateForm.artifactId.focus();
+                return false;
+            } else if(document.updateForm.version.value=="") {
+                alert("version不能为空!");
+                document.updateForm.version.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
-    <h2><strong>修改规则</strong></h2>
+    <h2 align="center"><strong>修改规则</strong></h2>
     <div th:include="/common/message :: html"/>
     <form name="updateForm" action="#" enctype="multipart/form-data" th:action="@{/rule/update(pid=${ruleInfo.pid})}"
           th:object="${ruleInfo}" method="post">
         <table align='center'>
             <tr>
-                <td align="right">groupId:</td>
+                <td></td>
+                <td> 注：加<span style="color:red;">*</span>不能为空~</td>
+            </tr>
+            <tr>
+                <td align="right">groupId<span style="color:red;">*</span></td>
                 <td>
                     <input type='text' th:field="*{groupId}" th:value="${ruleInfo.groupId}"/>
                 </td>
             </tr>
             <tr>
-                <td align="right">artifactId:</td>
+                <td align="right">artifactId<span style="color:red;">*</span></td>
                 <td>
                     <input type='text' th:field="*{artifactId}" th:value="${ruleInfo.artifactId}"/>
                 </td>
             </tr>
             <tr>
-                <td align="right">version:</td>
+                <td align="right">version<span style="color:red;">*</span></td>
                 <td>
                     <input type='text' th:field="*{version}" th:value="${ruleInfo.version}"/>
                 </td>

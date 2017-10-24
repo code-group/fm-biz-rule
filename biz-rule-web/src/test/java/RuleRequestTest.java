@@ -24,14 +24,10 @@ import java.util.Map;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = com.leFinance.creditLoan.bizRule.web.Application.class)
-public class ContractBizRuleTest {
+public class RuleRequestTest {
 
     @Autowired
     private RuleInterfaceImpl ruleInterfaceImpl;
-
-    @Autowired
-    @Qualifier("droolsConfig")
-    private DroolsConfig droolsConfig;
 
     @Test
     public void testContractBizRule(){
