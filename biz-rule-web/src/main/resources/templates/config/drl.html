@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>修改规则</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript">
+        function confirmForDelete(){
+            return window.confirm("你确认要删除该配置信息吗??");
+        }
+        function update(method){
+            document.all.updateForm.method.value=method;
+            document.all.updateForm.submit();
+        }
+
+    </script>
+</head>
+<body>
+    <h2><strong>修改规则</strong></h2>
+    <div th:include="/common/message :: html"/>
+    <form name="updateForm" action="#" enctype="multipart/form-data" th:action="@{/rule/update(pid=${ruleInfo.pid})}"
+          th:object="${ruleInfo}" method="post">
+        <table align='center'>
+            <tr>
+                <td align="right">groupId:</td>
+                <td>
+                    <input type='text' th:field="*{groupId}" th:value="${ruleInfo.groupId}"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">artifactId:</td>
+                <td>
+                    <input type='text' th:field="*{artifactId}" th:value="${ruleInfo.artifactId}"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">version:</td>
+                <td>
+                    <input type='text' th:field="*{version}" th:value="${ruleInfo.version}"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" colspan="2" style="color: blue">通过直接编辑或上传文件修改drl内容：</td>
+            </tr>
+            <tr>
+                <td align="right" valign="top">编辑drl内容:</td>
+                <td>
+                    <textarea rows="6" cols="80" th:field="*{drl}" th:text="${ruleInfo.drl}">
+                    </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">上传drl文件:</td>
+                <td>
+                    <input type='file' name="file"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">描述:</td>
+                <td>
+                    <input type='text' th:field="*{description}" th:value="${ruleInfo.description}"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"></td>
+                <td>
+                    <input type='hidden' name="method" value='${method}'/>
+                    <input type="button" onclick="update('updateDrl')" value="修改"/>
+                    <input type="button" onclick="update('updateAndLoad')" value="修改并加载"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

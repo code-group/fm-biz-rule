@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>新增规则</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <script type="text/javascript">
+            function confirmForDelete(){
+                return window.confirm("你确认要删除该配置信息吗??");
+            }
+            function save(method){
+                document.all.creationForm.method.value=method;
+                document.all.creationForm.submit();
+            }
+
+        </script>
+    </head>
+    <body>
+        <h2><strong>新增规则</strong></h2>
+        <div th:include="/common/message :: html"/>
+        <form name="creationForm" action="#" enctype="multipart/form-data" th:action="@{/rule/create_rule}" th:object="${ruleCreateVo}" method="post">
+            <table align='center'>
+                <tr>
+                    <td align="right">groupId:</td>
+                    <td>
+                        <input type='text' name="groupId" th:field="*{groupId}" width="255"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">artifactId:</td>
+                    <td>
+                        <input type='text' name="artifactId" th:field="*{artifactId}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">version:</td>
+                    <td>
+                        <input type='text' name="version" th:field="*{version}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">drl文件:</td>
+                    <td>
+                        <input type='file' name="file"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">描述:</td>
+                    <td>
+                        <input type='text' name="description" th:field="*{description}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"></td>
+                    <td>
+                        <input type='hidden' name="method" value='${method}'/>
+                        <input type="button" onclick="save('saveRule');" value="保存"/>
+                        <input type="button" onclick="save('saveAndLoad');" value="保存并加载"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

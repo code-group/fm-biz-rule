@@ -36,4 +36,17 @@ public interface RuleInfoMapper {
      * @Description: 批量插入规则信息
      **/
     void batchInsert(List<RuleInfo> ruleInfoList);
+
+
+    /**
+     * created by zhulili1, on 2017/10/18
+     * @Description: 查询规则版本列表（模糊查询）
+     **/
+    List<RuleInfo> listSelectRuleVersion(RuleVersionBo ruleCreateBo);
+
+    /**
+     * created by zhulili1, on 2017/10/23
+     * @Description: 删除一组规则信息
+     **/
+    void delRuleByVersion(RuleVersionBo ruleVersionBo);
 }

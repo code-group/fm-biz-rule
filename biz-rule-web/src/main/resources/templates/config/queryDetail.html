@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>规则信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2><strong>规则信息</strong></h2>
+<div th:include="/common/message :: html"></div>
+
+    <table align='center'>
+        <tr>
+            <td style="color: blue">groupId:</td>
+            <td><span th:text="${ruleDetailQueryVo.groupId}"/></td>
+            <td>,&nbsp;</td>
+            <td style="color: blue">artifactId:</td>
+            <td><span th:text="${ruleDetailQueryVo.artifactId}"/></td>
+            <td>,&nbsp;</td>
+            <td style="color: blue">version:</td>
+            <td><span th:text="${ruleDetailQueryVo.version}"/></td>
+        </tr>
+    </table>
+    <div th:if="${!#lists.isEmpty(ruleDetailQueryVo.ruleInfoList)}">
+        <table align='center'  border='1'>
+            <tr>
+                <td>描述</td>
+                <td>drl内容</td>
+                <td>创建时间</td>
+                <td>修改时间</td>
+                <td>操作</td>
+            </tr>
+            <tr th:each="ruleInfo : ${ruleDetailQueryVo.ruleInfoList}">
+                <td th:text="${ruleInfo.description}">...</td>
+                <td th:text="${ruleInfo.drl}">...</td>
+                <!--<td th:text="${#dates.format(ruleInfo.createTime, 'yyyy-MM-dd HH:mm:ss')}">...</td>-->
+                <td th:text="${ruleInfo.createTime}">...</td>
+                <td th:text="${ruleInfo.updateTime}">...</td>
+                <td>
+                    <a href="#" th:href="@{/rule/edit(pid=${ruleInfo.pid})}">编辑</a>&nbsp;&nbsp;&nbsp;
+                    <a href="#" th:href="@{/rule/delDrl(pid=${ruleInfo.pid})}">删除</a>&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

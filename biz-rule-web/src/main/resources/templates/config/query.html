@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>查询规则</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <h2><strong>查询规则</strong></h2>
+        <div th:include="/common/message :: html"></div>
+
+        <form action="#" th:action="@{/rule/query_rule}" method="post">
+            <table align='center'>
+                <tr>
+                    <td>groupId:</td>
+                    <td><input type="text" name="groupId"/></td>
+                    <td>artifactId:</td>
+                    <td><input type="text" name="artifactId"/></td>
+                    <td>
+                        <!--<input type='hidden' name="pageNo" value='1'/>-->
+                        <!--<input type='hidden' name="pageSize" value='15'/>-->
+                        <input type="submit" value="查询"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div th:if="${!#lists.isEmpty(ruleVersionList)}"> <!-- ${ruleVersionList != null} and-->
+            <table align='center'  border='1' width="800">
+                <tr>
+                    <td>groupId</td>
+                    <td>artifactId</td>
+                    <td>version</td>
+                    <td>操作</td>
+                </tr>
+                <tr th:each="ruleVersion : ${ruleVersionList}">
+                    <td th:text="${ruleVersion.groupId}">...</td>
+                    <td th:text="${ruleVersion.artifactId}">...</td>
+                    <td th:text="${ruleVersion.version}">...</td>
+                    <td>
+                        <a href="#" th:href="@{/rule/queryDetail(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">查看</a>&nbsp;&nbsp;&nbsp;
+                        <a href="#" th:href="@{/rule/load(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">加载</a>&nbsp;&nbsp;&nbsp;
+                        <a href="#" th:href="@{/rule/upgrade(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">修改版本</a>&nbsp;&nbsp;&nbsp;
+                        <a href="#" th:href="@{/rule/delGroup(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">删除</a>&nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

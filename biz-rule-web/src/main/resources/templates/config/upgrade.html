@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>修改版本信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript">
+        function confirmForDelete(){
+            return window.confirm("你确认要删除该配置信息吗??");
+        }
+        function save(method){
+            document.all.creationForm.method.value=method;
+            document.all.creationForm.submit();
+        }
+
+    </script>
+</head>
+<body>
+<h2><strong>修改版本信息</strong></h2>
+<div th:include="/common/message :: html"/>
+<form action="#" enctype="multipart/form-data" th:action="@{/rule/upgrade_rule}" method="post">
+    <table align='center'>
+        <tr>
+            <td width="20%" align="right" valign="top" rowspan="2">groupId:</td>
+            <td width="15%">当前值</td>
+            <td><span th:text="${oldGroupId}"/></td>
+        </tr>
+        <tr>
+            <td width="15%">修改为</td>
+            <td>
+                <input type='text' name="groupId" th:value="${newVersion.groupId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" align="right" valign="top" rowspan="2">artifactId:</td>
+            <td width="15%">当前值</td>
+            <td><span th:text="${newVersion.artifactId}"/></td>
+        </tr>
+        <tr>
+            <td width="15%">修改为</td>
+            <td>
+                <input type='text' name="artifactId" th:value="${newVersion.artifactId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" align="right" valign="top" rowspan="2">version:</td>
+            <td width="15%">当前值</td>
+            <td><span th:text="${newVersion.version}"/></td>
+        </tr>
+        <tr>
+            <td width="15%">修改为</td>
+            <td>
+                <input type='hidden' name="oldVersion" value='${method}'/>
+                <input type='text' name="version" th:with="version=${newVersion.version}" th:value="${version}" />
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" align="right"></td>
+            <td width="15%">
+                <input type="submit" value="修改"/>
+            </td>
+            <td></td>
+
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -30,6 +30,7 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.10.RELEASE" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter:1.5.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:1.5.6.RELEASE" />

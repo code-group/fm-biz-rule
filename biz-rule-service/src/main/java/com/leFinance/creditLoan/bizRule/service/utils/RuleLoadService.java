@@ -8,6 +8,7 @@ import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class RuleLoadService {
             KieUtil.loadRule(groupId, artifactId, version, drls);
         } catch (Exception e) {
             log.error("{}异常：{}", logPrefix, e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
