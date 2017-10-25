@@ -45,9 +45,6 @@ public class RuleManagementController {
     @Autowired
     private RuleLoadService ruleLoadService;
 
-    @Resource
-    private Transaction transaction;
-
     /**
      * created by zhulili1, on 2017/10/20
      * @Description: 创建规则
@@ -60,9 +57,11 @@ public class RuleManagementController {
     @RequestMapping(value="create_rule", method = RequestMethod.POST, params="method=saveRule")
     public String createRule(@RequestParam("file")MultipartFile file,
                              @ModelAttribute RuleCreateVo ruleCreateVo, ModelMap modelMap){
+        // 日志前缀
+        final String logPrefix = "创建规则, ";
         // 中文需要转码
         StringUtil.transformCode(ruleCreateVo);
-        log.info("创建规则, 入参：{}", ruleCreateVo.toString());
+        log.info("{}入参：{}", logPrefix, ruleCreateVo.toString());
         RuleCreateBo ruleCreateBo = new RuleCreateBo();
         BeanUtils.copyProperties(ruleCreateVo, ruleCreateBo);
         try {
@@ -72,35 +71,34 @@ public class RuleManagementController {
             ruleService.createRuleInfo(ruleCreateBo);
             modelMap.addAttribute("message", "创建成功");
         } catch (Exception e) {
-            return "You failed to upload " + " =>" + e.getMessage();
+            log.error("{}异常: {}", logPrefix, e.getMessage());
+            modelMap.addAttribute("message", "创建失败: "+ e.getMessage());
         }
         return "/config/ruleCreation";
     }
-
+    /**
+     * created by zhulili1, on 2017/10/20
+     * @Description: 创建规则,并加载
+     **/
     @RequestMapping(value="create_rule", method = RequestMethod.POST, params="method=saveAndLoad")
     public String createRuleAndLoad(@RequestParam("file")MultipartFile file,
                                     @ModelAttribute RuleCreateVo ruleCreateVo,
                                     ModelMap modelMap){
+        // 日志前缀
+        final String logPrefix = "创建规则并加载, ";
         // 中文需要转码
         StringUtil.transformCode(ruleCreateVo);
-        log.info("创建规则并加载, 入参：{}", ruleCreateVo.toString());
+        log.info("{}入参：{}", logPrefix, ruleCreateVo.toString());
         RuleCreateBo ruleCreateBo = new RuleCreateBo();
         BeanUtils.copyProperties(ruleCreateVo, ruleCreateBo);
         try {
             byte[] bytes = file.getBytes();
             String content = new String(bytes, "UTF-8");
             ruleCreateBo.setDrl(content);
-            transaction.execute(new Transaction.TransTask() {
-                @Override
-                public void task() {
-                    ruleService.createRuleInfo(ruleCreateBo);
-                    ruleLoadService.loadRule(ruleCreateBo.getGroupId(), ruleCreateBo.getArtifactId(), ruleCreateBo.getVersion());
-
-                }
-            });
-//            createAndLoadRule(ruleCreateBo);
+            ruleService.createAndLoadRule(ruleCreateBo);
             modelMap.addAttribute("message", "规则创建成功, 已加载");
         } catch (Exception e) {
+            log.error("{}", logPrefix);
             modelMap.addAttribute("message", "规则创建失败或加载失败：" + e.getMessage());
         }
         return "/config/ruleCreation";
@@ -181,9 +179,7 @@ public class RuleManagementController {
         log.info("{}入参: groupId={}, artifactId={}, version={}", logPrefix, groupId, artifactId, version);
         RuleVersionBo oldVersion = new RuleVersionBo(groupId, artifactId, version);
         RuleVersionBo newVersion = new RuleVersionBo(groupId, artifactId, version);
-//        modelMap.addAttribute("oldVersion", oldVersion);
         modelMap.addAttribute("newVersion", newVersion);
-//        modelMap.addAttribute("oldGroupId", groupId);
         httpSession.setAttribute("oldVersion", oldVersion);
         return "/config/upgrade";
     }
@@ -230,7 +226,7 @@ public class RuleManagementController {
             modelMap.addAttribute("message", "删除成功");
         } catch(Exception e){
             log.error("{}异常：{}", logPrefix, e.getMessage(), e);
-            modelMap.addAttribute("message", "删除失败");
+            modelMap.addAttribute("message", "删除失败"+e.getMessage());
         }
         return "/config/query";
     }
@@ -264,16 +260,15 @@ public class RuleManagementController {
                             ruleDetailQueryVo.getArtifactId(), ruleDetailQueryVo.getVersion()));
         } catch(Exception e){
             log.error("{}异常：{}", logPrefix, e.getMessage(), e);
-            modelMap.addAttribute("message", "删除失败");
+            modelMap.addAttribute("message", "删除失败"+e.getMessage());
         }
-
         modelMap.addAttribute("message", "删除成功");
         modelMap.addAttribute("ruleDetailQueryVo", ruleDetailQueryVo);
         return "/config/queryDetail";
     }
     /**
      * created by zhulili1, on 2017/10/24
-     * @Description: 修改Drl信息
+     * @Description: 修改drl信息
      **/
     @RequestMapping(value="update", method = RequestMethod.POST, params="method=updateDrl")
     public String update(@RequestParam("file")MultipartFile file, @ModelAttribute RuleInfo ruleInfo,
@@ -301,7 +296,7 @@ public class RuleManagementController {
 
     /**
      * created by zhulili1, on 2017/10/24
-     * @Description: 修改Drl并加载
+     * @Description: 修改drl并加载
      **/
     @RequestMapping(value="update", method = RequestMethod.POST, params="method=updateAndLoad")
     public String updateAndLoad(@RequestParam("file")MultipartFile file, @ModelAttribute RuleInfo ruleInfo,
@@ -318,16 +313,10 @@ public class RuleManagementController {
             if (!StringUtils.isEmpty(content)) {
                 ruleInfo.setDrl(content);
             }
-            transaction.execute(new Transaction.TransTask() {
-                @Override
-                public void task() {
-                    ruleService.updateDrl(ruleInfo);
-                    ruleLoadService.loadRule(ruleInfo.getGroupId(), ruleInfo.getArtifactId(), ruleInfo.getVersion());
-                }
-            });
-
+            ruleService.updateDrlAndLoadRule(ruleInfo);
             modelMap.addAttribute("message", "修改并加载成功");
         } catch (Exception e) {
+            log.error("{}异常: {}", logPrefix, e.getMessage(), e);
             modelMap.addAttribute("message", "修改或加载失败"+e.getMessage());
         }
 
@@ -355,10 +344,5 @@ public class RuleManagementController {
         return "success";
     }
 
-    @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRED)
-    public void createAndLoadRule(RuleCreateBo ruleCreateBo){
-        ruleService.createRuleInfo(ruleCreateBo);
-        ruleLoadService.loadRule(ruleCreateBo.getGroupId(), ruleCreateBo.getArtifactId(), ruleCreateBo.getVersion());
-        throw new RuntimeException("回滚?");
-    }
+
 }

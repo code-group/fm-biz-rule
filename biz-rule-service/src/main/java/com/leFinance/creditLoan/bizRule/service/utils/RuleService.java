@@ -97,7 +97,6 @@ public class RuleService {
      * @Description: 创建规则
      * @param ruleCreateBo
      */
-    @Transactional(rollbackFor = Exception.class)
     public void createRuleInfo(RuleCreateBo ruleCreateBo){
         // 日志前缀
         final String logPrefix = "创建规则, ";
@@ -242,5 +241,24 @@ public class RuleService {
             log.error("{}异常, {}", logPrefix, e.getMessage(), e);
             throw new RuntimeException(logPrefix + "异常" + e.getMessage());
         }
+    }
+    /**
+     * created by zhulili1, on 2017/10/25
+     * @Description: 创建并加载规则
+     **/
+    @Transactional(rollbackFor=Exception.class)
+    public void createAndLoadRule(RuleCreateBo ruleCreateBo){
+        createRuleInfo(ruleCreateBo);
+        ruleLoadService.loadRule(ruleCreateBo.getGroupId(), ruleCreateBo.getArtifactId(), ruleCreateBo.getVersion());
+    }
+
+    /**
+     * created by zhulili1, on 2017/10/25
+     * @Description: 修改drl并加载规则
+     **/
+    @Transactional(rollbackFor=Exception.class)
+    public void updateDrlAndLoadRule(RuleInfo ruleInfo){
+        updateDrl(ruleInfo);
+        ruleLoadService.loadRule(ruleInfo.getGroupId(), ruleInfo.getArtifactId(), ruleInfo.getVersion());
     }
 }
