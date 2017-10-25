@@ -6,7 +6,6 @@ import com.leFinance.creditLoan.bizRule.common.utils.StringUtil;
 import com.leFinance.creditLoan.bizRule.domain.RuleInfo;
 import com.leFinance.creditLoan.bizRule.service.utils.RuleLoadService;
 import com.leFinance.creditLoan.bizRule.service.utils.RuleService;
-import com.leFinance.creditLoan.bizRule.service.utils.Transaction;
 import com.leFinance.creditLoan.bizRule.vo.RuleCreateVo;
 import com.leFinance.creditLoan.bizRule.vo.RuleDetailQueryVo;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
