@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>新增规则</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript">
+        function save(method) {
+            if (window.check()) {
+                document.all.creationForm.method.value = method;
+                document.all.creationForm.submit();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function check() {
+            if (document.creationForm.groupId.value == "") {
+                alert("groupId不能为空!");
+                document.creationForm.groupId.focus();
+                return;
+            } else if (document.creationForm.artifactId.value == "") {
+                alert("artifactId不能为空!");
+                document.creationForm.artifactId.focus();
+                return;
+            } else {
+                document.all.creationForm.submit();
+            }
+        }
+    </script>
+    <script language="javascript" type="text/javascript">
+        //<![CDATA[
+        function findObj(theObj, theDoc) {
+            var p, i, foundObj;
+            if (!theDoc) theDoc = document;
+            if ((p = theObj.indexOf("?")) > 0 && parent.frames.length) {
+                theDoc = parent.frames[theObj.substring(p + 1)].document;
+                theObj = theObj.substring(0, p);
+            }
+            if (!(foundObj = theDoc[theObj]) && theDoc.all)
+                foundObj = theDoc.all[theObj];
+            for (i = 0; !foundObj && i < theDoc.forms.length; i++)
+                foundObj = theDoc.forms[i][theObj];
+            for (i = 0; !foundObj && theDoc.layers && i < theDoc.layers.length; i++)
+                foundObj = findObj(theObj, theDoc.layers[i].document);
+            if (!foundObj && document.getElementById)
+                foundObj = document.getElementById(theObj);
+            return foundObj;
+        }
+
+        function addRow() { //读取最后一行的行号, 存放在drlTRLastIndex文本框中
+            var drlTRLastIndex = findObj("drlTRLastIndex", document);
+            var rowID = parseInt(drlTRLastIndex.value);
+
+            var signFrame = findObj("drlFileTable", document);
+            //添加行
+            var newTR = signFrame.insertRow(signFrame.rows.length);
+            newTR.id = "drlItem" + rowID;
+
+            //添加文件
+            var newNameTD = newTR.insertCell(0);
+            //添加列内容
+            newNameTD.innerHTML = "<input name='file' type='file' />";
+
+            //添加描述
+            var newNameTD = newTR.insertCell(1);
+            //添加列内容
+            newNameTD.innerHTML = "<input style=\"width:256px;\" name='description' type='text'/>";
+
+            //添加列:删除按钮
+            var newDeleteTD = newTR.insertCell(2);
+            //添加列内容
+            newDeleteTD.innerHTML = "<input id='txtDel" + rowID + "' type='button' value='删除' onclick=\"delRow('drlItem" + rowID + "');\" />";
+
+            //将行号推进下一行
+            drlTRLastIndex.value = (rowID + 1).toString();
+
+        }
+
+        //删除指定行
+        function delRow(rowid) {
+            var signFrame = findObj("drlFileTable", document);
+            var signItem = findObj(rowid, document);
+
+            //获取将要删除的行的Index
+            var rowIndex = signItem.rowIndex;
+            //删除指定Index的行
+            signFrame.deleteRow(rowIndex);
+        }
+        //]]>
+    </script>
+</head>
+<body>
+<h2 align="center"><strong>新增规则</strong></h2>
+<div th:include="/common/message :: html"/>
+<form name="creationForm" action="#" enctype="multipart/form-data" th:action="@{/rule/create_new}"
+      th:object="${ruleCreateVo}" method="post">
+    <table align='center'>
+        <tr>
+            <td></td>
+            <td> 注：加<span style="color:red;">*</span>必填~</td>
+        </tr>
+        <tr>
+            <td align="right">groupId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="groupId" th:field="*{groupId}" width="255"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">artifactId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="artifactId" th:field="*{artifactId}"/>
+            </td>
+        </tr>
+    </table>
+    <p align="center"><span>上传规则文件及相应描述</span></p>
+    <table align="center" id="drlFileTable" border="1">
+        <tr align="center">
+            <td width="256">文件</td>
+            <td width="256">描述</td>
+            <td><input type="button" name="add" value="添加" onclick="addRow()"/>
+                <input name='drlTRLastIndex' type='hidden' id='drlTRLastIndex' value="2"/>
+            </td>
+        </tr>
+        <tr align="center" id="drlItem1">
+            <td>
+                <input name='file' type='file' />
+            </td>
+            <td>
+                <input name='description' style="width:256px;" type='text'/>
+            </td>
+            <td>
+                <input id='txtDel1' type='button' value='删除' onclick="delRow('drlItem1');" />
+            </td>
+
+        </tr>
+    </table>
+    <p align="center"><input type="button" value="保存" onclick="check()"/></p>
+
+</form>
+
+
+</body>
+
+</html>

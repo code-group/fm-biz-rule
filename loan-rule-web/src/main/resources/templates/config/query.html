@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>查询规则</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <h2 align="center"><strong>查询规则</strong></h2>
+        <div th:include="/common/message :: html"></div>
+
+        <form action="#" th:action="@{/rule/query_rule}" method="post">
+            <table align='center'>
+                <tr>
+                    <td>groupId:</td>
+                    <td><input type="text" name="groupId"/></td>
+                    <td>artifactId:</td>
+                    <td><input type="text" name="artifactId"/></td>
+                    <td>
+                        <!--<input type='hidden' name="pageNo" value='1'/>-->
+                        <!--<input type='hidden' name="pageSize" value='15'/>-->
+                        <input type="submit" value="查询"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div th:if="${!#lists.isEmpty(ruleVersionList)}"> <!-- ${ruleVersionList != null} and-->
+            <table align='center' border='1' width="700">
+                <tr>
+                    <th>groupId</th>
+                    <th>artifactId</th>
+                    <th>version</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+
+                <tr th:each="ruleVersion : ${ruleVersionList}">
+                    <td th:text="${ruleVersion.groupId}">...</td>
+                    <td th:text="${ruleVersion.artifactId}">...</td>
+                    <td th:text="${ruleVersion.version}">...</td>
+
+                    <td th:if="${ruleVersion.status} == 1" th:text="启用" style="color: green">...</td>
+                    <td th:if="${ruleVersion.status} != 1" th:text="禁用">...</td>
+
+                    <td>
+                        <!--<a href="#" th:href="@{/rule/queryDetail(groupId=${ruleVersion.groupId},-->
+                                                          <!--artifactId=${ruleVersion.artifactId},-->
+                                                          <!--version= ${ruleVersion.version})}">查看</a>&nbsp;&nbsp;&nbsp;-->
+                        <a href="#" th:href="@{/rule/load(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">启用</a>&nbsp;&nbsp;&nbsp;
+
+                        <a href="#" th:href="@{/rule/unload(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">禁用</a>&nbsp;&nbsp;&nbsp;
+                        <a href="#" th:href="@{/rule/update(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">修改</a>&nbsp;&nbsp;&nbsp;
+                        <!--<a href="#" th:href="@{/rule/upgrade(groupId=${ruleVersion.groupId},-->
+                                                          <!--artifactId=${ruleVersion.artifactId},-->
+                                                          <!--version= ${ruleVersion.version})}">修改版本</a>&nbsp;&nbsp;&nbsp;-->
+                        <a href="#" th:href="@{/rule/delGroup(groupId=${ruleVersion.groupId},
+                                                          artifactId=${ruleVersion.artifactId},
+                                                          version= ${ruleVersion.version})}">删除</a>&nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

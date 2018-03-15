@@ -7,18 +7,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="biz-rule-common" />
-        <module name="biz-rule-dao" />
-        <module name="biz-rule-interface" />
-        <module name="biz-rule-interface-impl" />
-        <module name="biz-rule-service" />
-        <module name="biz-rule-web" />
         <module name="drools-common" />
         <module name="drools-interface" />
         <module name="drools-interface-impl" />
         <module name="drools-interfaceImpl" />
         <module name="drools-service" />
         <module name="drools-web" />
+        <module name="loan-rule-api" />
+        <module name="loan-rule-common" />
+        <module name="loan-rule-dao" />
+        <module name="loan-rule-service" />
+        <module name="loan-rule-web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
@@ -35,6 +34,12 @@
       <module name="drools-service" target="1.8" />
       <module name="drools-web" target="1.8" />
       <module name="fm-biz-rule" target="1.8" />
+      <module name="loan-rule" target="1.8" />
+      <module name="loan-rule-api" target="1.8" />
+      <module name="loan-rule-common" target="1.8" />
+      <module name="loan-rule-dao" target="1.8" />
+      <module name="loan-rule-service" target="1.8" />
+      <module name="loan-rule-web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

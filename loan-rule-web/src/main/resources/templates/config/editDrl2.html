@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>规则信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script language="javascript" type="text/javascript">
+        //<![CDATA[
+        function findObj(theObj, theDoc) {
+            var p, i, foundObj;
+            if (!theDoc) theDoc = document;
+            if ((p = theObj.indexOf("?")) > 0 && parent.frames.length) {
+                theDoc = parent.frames[theObj.substring(p + 1)].document;
+                theObj = theObj.substring(0, p);
+            }
+            if (!(foundObj = theDoc[theObj]) && theDoc.all)
+                foundObj = theDoc.all[theObj];
+            for (i = 0; !foundObj && i < theDoc.forms.length; i++)
+                foundObj = theDoc.forms[i][theObj];
+            for (i = 0; !foundObj && theDoc.layers && i < theDoc.layers.length; i++)
+                foundObj = findObj(theObj, theDoc.layers[i].document);
+            if (!foundObj && document.getElementById)
+                foundObj = document.getElementById(theObj);
+            return foundObj;
+        }
+
+        function addRow() { //读取最后一行的行号，存放在drlTRLastIndex文本框中
+            var drlTRLastIndex = findObj("drlTRLastIndex", document);
+            var rowID = parseInt(drlTRLastIndex.value);
+
+            var signFrame = findObj("drlFileTable", document);
+            //添加行
+            var newTR = signFrame.insertRow(signFrame.rows.length);
+            newTR.id = "drlItem" + rowID;
+
+            //添加描述
+            var newNameTD = newTR.insertCell(0);
+            //添加列内容
+            newNameTD.innerHTML = "<input name='description' type='text' />";
+
+            //添加drl内容
+            var newNameTD = newTR.insertCell(1);
+            //添加列内容
+            newNameTD.innerHTML = "<input name='file' type='file' />";
+
+            //添加创建时间
+            var newNameTD = newTR.insertCell(2);
+            //添加列内容
+            newNameTD.innerHTML = "<span> - </span>";
+
+            //添加列:删除按钮
+            var newDeleteTD = newTR.insertCell(3);
+            //添加列内容
+            newDeleteTD.innerHTML = "<input id='txtDel" + rowID + "' type='button' value='删除' onclick=\"delRow('drlItem" + rowID + "');\" />";
+
+            //将行号推进下一行
+            drlTRLastIndex.value = (rowID + 1).toString();
+
+            console.log(drlTRLastIndex.value);
+
+        }
+
+        //根据rowid删除指定行
+        function delRow(rowid) {
+            var signFrame = findObj("drlFileTable", document);
+            var signItem = findObj(rowid, document);
+
+            //获取将要删除的行的Index
+            var rowIndex = signItem.rowIndex;
+            //删除指定Index的行
+            signFrame.deleteRow(rowIndex);
+        }
+        //]]>
+        //删除指定行
+        function deleteRow(r)
+        {
+            var i=r.parentNode.parentNode.rowIndex
+            document.getElementById('drlFileTable').deleteRow(i)
+        }
+    </script>
+</head>
+<body>
+<h2 align="center"><strong>规则信息</strong></h2>
+<div th:include="/common/message :: html"></div>
+
+<form name="editForm" action="#" enctype="multipart/form-data" th:action="@{/rule/edit_drl}" method="post">
+    <table align='center'>
+        <tr>
+            <td style="color: blue">groupId:</td>
+            <td><span th:text="${groupId}"/>
+                <input type='hidden' name="groupId" th:value="${groupId}"/>
+            </td>
+            <td>,&nbsp;</td>
+            <td style="color: blue">artifactId:</td>
+            <td><span th:text="${artifactId}"/>
+                <input type='hidden' name="artifactId" th:value="${artifactId}"/>
+            </td>
+            <td>,&nbsp;</td>
+            <td style="color: blue">version:</td>
+            <td><span th:text="${version}"/>
+                <input type='hidden' name="version" th:value="${version}"/>
+            </td>
+        </tr>
+    </table>
+    <!--<div th:if="${!#lists.isEmpty(ruleInfoList)}">-->
+    <div th:if="${!#lists.isEmpty(ruleUpdateVoList)}" th:object="${ruleUpdateVoList}">
+        <table align='center'  border='1' id="drlFileTable">
+            <tr>
+                <td>描述</td>
+                <td>drl内容</td>
+                <td>创建时间</td>
+                <!--<td>修改时间</td>-->
+                <td><input type="button" name="add" value="添加" onclick="addRow()"/>
+                    <input name='drlTRLastIndex' type='hidden' id='drlTRLastIndex' value="1"/>
+                </td>
+            </tr>
+
+            <!--<tr th:each="ruleInfo : ${ruleInfoList}">-->
+                <!--<td>-->
+                    <!--&lt;!&ndash;<input type="hidden" name="pid" th:value="${ruleInfo.pid}"/>&ndash;&gt;-->
+                    <!--<input name="description" type="text" th:value="${ruleInfo.description}"/></td>-->
+                <!--<td>-->
+                    <!--<input name="drlOrigin" type="checkbox" value="str" checked="checked"/>-->
+                    <!--<textarea name="drl" rows="6" cols="80" th:text='${ruleInfo.drl}'> </textarea>-->
+                    <!--<br></br>-->
+                    <!--<input name="drlOrigin" type="checkbox" value="file"/>-->
+                    <!--<input type='file' name="file"/>-->
+                <!--</td>-->
+                <!--<td th:text="${ruleInfo.createTime}">...</td>-->
+                <!--&lt;!&ndash;<td th:text="${ruleInfo.updateTime}">...</td>&ndash;&gt;-->
+                <!--<td>-->
+                    <!--<input type="button" value="删除" onclick="deleteRow(this)"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+
+            <tr th:each="ruleUpdateVo : ${ruleUpdateVoList}">
+                <td>
+                    <input name="description" type="text" th:value="${ruleUpdateVo.description}"/>
+                </td>
+                <td>
+                    <input name="radioNameTest" name="${ruleUpdateVo.radioName}" type="radio" value="str" checked="checked"/>
+                    <textarea name="drl" rows="6" cols="80" th:text="${ruleUpdateVo.drl}"> </textarea>
+                    <br></br>
+                    <input name="radioNameTest" name="${ruleUpdateVo.radioName}" type="radio" value="file"/>
+                    <input type='file' name="file"/>
+                </td>
+                <td th:text="${ruleUpdateVo.createTime}">...</td>
+                <td>
+                    <input type="button" value="删除" onclick="deleteRow(this)"/>
+                </td>
+            </tr>
+
+
+        </table>
+    </div>
+
+    <p align="center"><input type="submit" value="保存"/></p>
+</form>
+
+</body>
+</html>

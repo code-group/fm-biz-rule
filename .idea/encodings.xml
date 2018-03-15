@@ -8,5 +8,10 @@
     <file url="file://$PROJECT_DIR$/biz-rule-interface-impl" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/biz-rule-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/biz-rule-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/loan-rule-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/loan-rule-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/loan-rule-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/loan-rule-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/loan-rule-web" charset="UTF-8" />
   </component>
 </project>

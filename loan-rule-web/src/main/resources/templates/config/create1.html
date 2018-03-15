@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>新增规则</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function(){
+            $("#groupId").focus();
+//            $("#artifactId").focus();
+        });
+        var checkGA = function(){
+            // 异步验证名称是否重复
+            if ($.trim($("#groupId").val())=="") {
+                $("#message").html("groupId不能为空");
+                $("#groupId").focus();
+            } else if ($.trim($("#artifactId").val())=="") {
+                $("#message").html("artifactId不能为空");
+                $("#artifactId").focus();
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/rule/checkDuplication",
+                    data: {
+                        "groupId": $("#groupId").val(),
+                        "artifactId": $("#artifactId").val()
+                    },
+                    success: function(message){ // 验证返回的消息
+                        console.log(message);
+                        if (message == "true") { // 重复
+                            $("#message").html("groupId与artifactId组合已存在, 请更换groupId或artifactId！");
+                        } else if (message == "false") { // 不重复
+                            console.log("false");
+                            document.forms['creationForm'].elements['submitButton'].disabled = '';
+                        } else {
+                            $("#message").html("检查名称是否重复异常TT");
+                        }
+                    }
+                });
+            }
+        };
+    </script>
+    <script language="javascript" type="text/javascript">
+        //<![CDATA[
+        function findObj(theObj, theDoc) {
+            var p, i, foundObj;
+            if (!theDoc) theDoc = document;
+            if ((p = theObj.indexOf("?")) > 0 && parent.frames.length) {
+                theDoc = parent.frames[theObj.substring(p + 1)].document;
+                theObj = theObj.substring(0, p);
+            }
+            if (!(foundObj = theDoc[theObj]) && theDoc.all)
+                foundObj = theDoc.all[theObj];
+            for (i = 0; !foundObj && i < theDoc.forms.length; i++)
+                foundObj = theDoc.forms[i][theObj];
+            for (i = 0; !foundObj && theDoc.layers && i < theDoc.layers.length; i++)
+                foundObj = findObj(theObj, theDoc.layers[i].document);
+            if (!foundObj && document.getElementById)
+                foundObj = document.getElementById(theObj);
+            return foundObj;
+        }
+
+        function addRow() { //读取最后一行的行号, 存放在drlTRLastIndex文本框中
+            var drlTRLastIndex = findObj("drlTRLastIndex", document);
+            var rowID = parseInt(drlTRLastIndex.value);
+
+            var signFrame = findObj("drlFileTable", document);
+            //添加行
+            var newTR = signFrame.insertRow(signFrame.rows.length);
+            newTR.id = "drlItem" + rowID;
+
+            //添加文件
+            var newNameTD = newTR.insertCell(0);
+            //添加列内容
+            newNameTD.innerHTML = "<input name='file' type='file' />";
+
+            //添加描述
+            var newNameTD = newTR.insertCell(1);
+            //添加列内容
+            newNameTD.innerHTML = "<input style=\"width:256px;\" name='description' type='text'/>";
+
+            //添加列:删除按钮
+            var newDeleteTD = newTR.insertCell(2);
+            //添加列内容
+            newDeleteTD.innerHTML = "<input id='txtDel" + rowID + "' type='button' value='删除' onclick=\"delRow('drlItem" + rowID + "');\" />";
+
+            //将行号推进下一行
+            drlTRLastIndex.value = (rowID + 1).toString();
+
+        }
+
+        //删除指定行
+        function delRow(rowid) {
+            var signFrame = findObj("drlFileTable", document);
+            var signItem = findObj(rowid, document);
+
+            //获取将要删除的行的Index
+            var rowIndex = signItem.rowIndex;
+            //删除指定Index的行
+            signFrame.deleteRow(rowIndex);
+        }
+        //]]>
+    </script>
+</head>
+<body>
+<h2 align="center"><strong>新增规则</strong></h2>
+<div th:include="/common/message :: html"/>
+<form name="creationForm" action="#" enctype="multipart/form-data" th:action="@{/rule/create_new}"
+      th:object="${ruleCreateVo}" method="post">
+    <table align='center'>
+        <tr>
+            <td></td>
+            <td> 注：加<span style="color:red;">*</span>必填~</td>
+        </tr>
+        <tr>
+            <td align="right">groupId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="groupId" th:field="*{groupId}" width="255"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">artifactId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="artifactId" th:field="*{artifactId}" onblur="checkGA()"/>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><em id="message"></em></td>
+        </tr>
+    </table>
+    <p align="center"><span>上传规则文件及相应描述</span></p>
+    <table align="center" id="drlFileTable" border="1">
+        <tr align="center">
+            <td width="256">文件</td>
+            <td width="256">描述</td>
+            <td><input type="button" name="add" value="添加" onclick="addRow()"/>
+                <input name='drlTRLastIndex' type='hidden' id='drlTRLastIndex' value="2"/>
+            </td>
+        </tr>
+        <tr align="center" id="drlItem1">
+            <td>
+                <input name='file' type='file' />
+            </td>
+            <td>
+                <input name='description' style="width:256px;" type='text'/>
+            </td>
+            <td>
+                <input id='txtDel1' type='button' value='删除' onclick="delRow('drlItem1');" />
+            </td>
+
+        </tr>
+    </table>
+    <p align="center"><input type="submit" id="submitButton" value="保存" disabled="disabled"/></p>
+
+</form>
+
+
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>调用规则</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
+    <script type="text/javascript">
+        function check() {
+            if (document.versionForm.groupId.value == "") {
+                alert("groupId不能为空!");
+                document.versionForm.groupId.focus();
+                return;
+            } else if (document.versionForm.artifactId.value == "") {
+                alert("artifactId不能为空!");
+                document.versionForm.artifactId.focus();
+                return;
+            } else if (document.versionForm.version.value == "") {
+                alert("version不能为空!");
+                document.versionForm.version.focus();
+                return;
+            } else {
+                document.all.versionForm.submit();
+            }
+        }
+    </script>
+    <script language="javascript" type="text/javascript">
+        //<![CDATA[
+        function findObj(theObj, theDoc) {
+            var p, i, foundObj;
+            if (!theDoc) theDoc = document;
+            if ((p = theObj.indexOf("?")) > 0 && parent.frames.length) {
+                theDoc = parent.frames[theObj.substring(p + 1)].document;
+                theObj = theObj.substring(0, p);
+            }
+            if (!(foundObj = theDoc[theObj]) && theDoc.all)
+                foundObj = theDoc.all[theObj];
+            for (i = 0; !foundObj && i < theDoc.forms.length; i++)
+                foundObj = theDoc.forms[i][theObj];
+            for (i = 0; !foundObj && theDoc.layers && i < theDoc.layers.length; i++)
+                foundObj = findObj(theObj, theDoc.layers[i].document);
+            if (!foundObj && document.getElementById)
+                foundObj = document.getElementById(theObj);
+            return foundObj;
+        }
+
+        function addRow(type) { //读取最后一行的行号, 存放在keyLastIndext文本框中
+            var keyLastIndext = findObj("keyLastIndext", document);
+            var rowID = parseInt(keyLastIndext.value);
+
+            var signFrame = findObj("keyTable", document);
+            //添加行
+            var newTR = signFrame.insertRow(signFrame.rows.length);
+            newTR.id = "drlItem" + rowID;
+
+            //添加类别
+            var newNameTD = newTR.insertCell(0);
+            newNameTD.align = "center";
+            if (type == 1) {
+                newNameTD.innerHTML = "<input type='hidden' name='type' value='1'/> <span>字符串</span>";
+            } else {
+                newNameTD.innerHTML = "<input type='hidden' name='type' value='2'/> <span>数字</span>";
+
+            }
+            //添加key
+            var newNameTD = newTR.insertCell(1);
+            //添加列内容
+            newNameTD.innerHTML = "<input name='key' type='text' />";
+
+            //添加value
+            var newNameTD = newTR.insertCell(2);
+            //添加列内容
+            if (type == 1) {
+                newNameTD.innerHTML = "<input name='value' type='text'/>";
+            } else {
+                newNameTD.innerHTML = "<input name='value' type='text' onkeyup='clearNoNum(this)'/>";
+            }
+
+            //添加列:删除按钮
+            var newDeleteTD = newTR.insertCell(3);
+            newDeleteTD.align = "center";
+            //添加列内容
+            newDeleteTD.innerHTML = "<input id='txtDel" + rowID + "' type='button' value='删除' onclick=\"delRow('drlItem" + rowID + "');\" />";
+
+            //将行号推进下一行
+            keyLastIndext.value = (rowID + 1).toString();
+
+        }
+
+        //删除指定行
+        function delRow(rowid) {
+            var signFrame = findObj("keyTable", document);
+            var signItem = findObj(rowid, document);
+
+            //获取将要删除的行的Index
+            var rowIndex = signItem.rowIndex;
+            //删除指定Index的行
+            signFrame.deleteRow(rowIndex);
+        }
+
+        // 清除非0数字
+        function clearNoNum(obj) {
+            obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+            obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字而不是
+            obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+            obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        }
+        //]]>
+    </script>
+</head>
+<body>
+<h2 align="center"><strong>调用规则</strong></h2>
+<div th:include="/common/message :: html"/>
+<form name="versionForm" action="#" th:action="@{/rule/call_rule}" method="post">
+    <table align='center'>
+        <tr>
+            <td></td>
+            <td> 注：加<span style="color:red;">*</span>必填~</td>
+        </tr>
+        <tr>
+            <td align="right">groupId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="groupId" th:value="${groupId}" width="255"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">artifactId<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="artifactId" th:value="${artifactId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">version<span style="color:red;">*</span></td>
+            <td>
+                <input type='text' name="version" th:value="${version}"/>
+            </td>
+        </tr>
+
+    </table>
+    <p align="center"><span>设置参数</span></p>
+    <table align="center" id="keyTable" border="1">
+        <tr align="center">
+            <td width="50">类型</td>
+            <td width="132">key</td>
+            <td width="132">value</td>
+            <td>
+                <input type="button" name="addStr" value="添加字符串" onclick="addRow(1)"/>
+                <input type="button" name="addNum" value="添加数字" onclick="addRow(2)"/>
+                <input name='keyLastIndext' type='hidden' id='keyLastIndext' value="1"/>
+            </td>
+        </tr>
+    </table>
+    <p align="center"><input type="button" value="调用" onclick="check()"/></p>
+</form>
+    <div th:if="${result} != null">
+        <table align="center">
+            <tr align="center">
+                <td valign="top">返回结果</td>
+                <td><textarea name="drl" rows="3" cols="60" th:text="${result}"> </textarea></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

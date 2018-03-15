@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Untitled Page</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type ="text/javascript" >
+        //动态添加行
+        function addRowMx() {
+
+            if(document.all.mxTable.rows.length > 20){
+                alert("您最多可以添加20行。");
+            }else{
+
+                //添加一行
+                var newTr = document.all.mxTable.insertRow();
+                var rowId = document.all.mxTable.rows.length;
+
+                //添加两列
+                var newTd0 = newTr.insertCell();
+                var newTd1 = newTr.insertCell();
+                var newTd2 = newTr.insertCell();
+                var newTd3 = newTr.insertCell();
+                var newTd4 = newTr.insertCell();
+
+                //设置列内容和属性
+                newTd0.innerHTML = '<input name="mxRecord'+ rowId + '" type="text" class="input" maxlength="70" style="width:20%;">.${domainName}';
+                newTd1.innerHTML = '<input name="mxContent'+ rowId + '" type="text" class="input" maxlength="70" style="width:100%;">';
+                newTd2.innerHTML = '<input name="mxPrio'+ rowId + '" type="text" class="input" maxlength="70" style="width:100%;" value="20">';
+                newTd3.innerHTML = '<input name="mxTtl'+ rowId + '" type="text" class="input" maxlength="70" style="width:100%;" value="3600"> <input type="hidden" name= "mxId" value="' + rowId  + '" id = "mxId" >';
+
+            }
+
+
+
+        }
+
+
+        //删除当前行
+        function delMyRow(j){
+            var mytable = document.getElementById("mybody");
+            var myrow = document.getElementById("tr"+j);
+            mytable.deleteRow(myrow.rowIndex-1);
+        }
+        //删除所有行     
+        function delAllMyRow(){
+            var mytable = document.getElementById("mybody");
+            var rowlen=mytable.rows.length;
+            for(var i=rowlen-1;i>=0;i--){
+                mytable.deleteRow(i);
+            }
+        }
+
+
+        //取得事件所在的tr
+        function getTR() {
+            var obj=event.srcElement;
+            while (obj.tagName !="TR") {
+                obj = obj.parentElement;
+            }
+            return obj;
+        }
+
+        //删除事件所在的行
+        function onDeleteRow(tableObject,alertMessage){
+            if (window.confirm(alertMessage)){
+                var oRow=getTR();
+                tableObject.deleteRow(oRow.rowIndex);
+            }
+        }
+
+
+
+
+    </script>
+
+</head>
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="1" class="pageTb" id = "mxTable" name = "mxTable">
+    <input type="hidden" name="domainName" value="${domainName }"/>
+
+    <INPUT type="hidden" name="mxRecord1" />
+    <INPUT type="hidden" name="mxContent1" />
+    <INPUT type="hidden" name="mxPrio1" />
+    <INPUT type="hidden" name="mxTtl1" />
+
+    <TR>
+        <TD> 邮件交换记录 (MX)(最多允许20条) </TD>
+        <TD> 目标主机</TD>
+        <TD> 优先级</TD>
+        <TD> TTL </TD>
+        <TD> 操作</TD>
+    </TR>
+    <c:forEach items= "${listMx}" var = "objMx" varStatus="status">
+        <TR>
+
+            <TD>${objMx[0]}</TD>
+            <TD>${objMx[1]}</TD>
+            <TD>${objMx[2]}</TD>
+            <TD>${objMx[3]}</TD>
+            <TD><a href='javascript:addRowMx();'>添加</a>&nbsp&nbsp&nbsp<a href='javascript:modRowMx("${objMx[0]}","${objMx[1]}","${objMx[2]}","${objMx[3]}","${status.index+1}");'>修改</a> <a href='javascript:deleteRowMx("${objMx[0]}","${objMx[1]}","${objMx[2]}","${objMx[3]}");'>删除</a></TD>
+        </TR>
+    </c:forEach>
+</table>
+</body>
+</html>
